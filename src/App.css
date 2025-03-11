@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*   const handleOnDelete = (itemId, taskId) => {
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      const copyTask = tasks.map((task) => {
+        if (task.id === itemId) {
+          return {
+            ...task,
+            task: task.task.filter((removeTask) => removeTask.id !== taskId),
+          };
+        }
+        return task;
+      });
+      setTask(copyTask);
+    }
+  }; */
