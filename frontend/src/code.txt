@@ -1,0 +1,206 @@
+import React, { useRef, useReducer } from "react";
+import "./App.css";
+
+const initialState = {
+  tasks: [],
+  isComment: false,
+};
+
+function reducer(state, action) {
+  if (action.type === "ADD_TASK") {
+    return {
+      ...state,
+      tasks: [
+        ...state.tasks,
+        {
+          id: Date.now(),
+          userName: action.userName,
+          userAge: action.userAge,
+          userEmail: action.userEmail,
+          isCompleted: false,
+          isComment: false,
+          comments: [],
+        },
+      ],
+    };
+  } else if (action.type === "DELETE_TASK" && action.taskId) {
+    return {
+      ...state,
+      tasks: state.tasks.filter((task) => task.id !== action.taskId),
+    };
+  } else if (action.type === "COMMENT_TASK") {
+    return {
+      ...state,
+      tasks: state.tasks.map((task) => {
+        if (task.id === action.taskId) {
+          return { ...task, isComment: true };
+        }
+        return task;
+      }),
+    };
+  } else if (action.type === "ADD_COMMENTS") {
+    return {
+      ...state,
+      tasks: state.tasks.map((task) => {
+        return {
+          ...task,
+          isComment: false,
+          comments: [
+            ...task.comments,
+            { commentName: action.userComment, id: Date.now(), isEdit: false },
+          ],
+        };
+      }),
+    };
+  }
+  return state;47
+}
+
+function App() {
+  const nameRef = useRef(null);
+  const ageRef = useRef("");
+  const emailRef = useRef("");
+  const commentRef = useRef("");
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleOnSubmitForm = (e) => {
+    e.preventDefault();
+
+    if (
+      nameRef.current.value === "" ||
+      nameRef.current.value === "" ||
+      nameRef.current.value === ""
+    ) {
+      return;
+    }
+
+    dispatch({
+      type: "ADD_TASK",
+      userName: nameRef.current.value,
+      userAge: ageRef.current.value,
+      userEmail: emailRef.current.value,
+    });
+
+    nameRef.current.value = "";
+    ageRef.current.value = "";
+    emailRef.current.value = "";
+  };
+
+  const handleOnDelete = (taskId) => {
+    dispatch({ type: "DELETE_TASK", taskId });
+  };
+
+  const handleOnCommentsButtonClick = (taskId) => {
+    dispatch({ type: "COMMENT_TASK", taskId });
+  };
+
+  const handleOnAddComments = (eventKey) => {
+    if (eventKey === "Enter") {
+      dispatch({ type: "ADD_COMMENTS", userComment: commentRef.current.value });
+      commentRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="w-full h-screen flex flex-col items-center bg-gray-100 py-10">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Task Manager</h1>
+      <form
+        action=""
+        className="flex flex-col gap-4 w-3/4 md:w-1/2 bg-white shadow-md rounded-lg p-6"
+        onSubmit={(e) => handleOnSubmitForm(e)}
+      >
+        <input
+          type="text"
+          placeholder="Enter your name"
+          ref={nameRef}
+          className="border border-gray-300 outline-none py-2 px-4 rounded-lg font-medium placeholder-gray-500 focus:ring-2 focus:ring-blue-400"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter your age"
+          ref={ageRef}
+          className="border border-gray-300 outline-none py-2 px-4 rounded-lg font-medium placeholder-gray-500 focus:ring-2 focus:ring-blue-400"
+          required
+        />
+        <input
+          type="email"
+          placeholder="text@example.com"
+          ref={emailRef}
+          className="border border-gray-300 outline-none py-2 px-4 rounded-lg font-medium placeholder-gray-500 focus:ring-2 focus:ring-blue-400"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
+        >
+          Add Task
+        </button>
+      </form>
+
+      <div className="w-3/4 md:w-1/2 mt-8 space-y-4">
+        {state.tasks.map((task) => (
+          <div
+            key={task.id}
+            className="bg-white shadow-md rounded-lg p-6 flex flex-col gap-4"
+          >
+            <div className="text-gray-700">
+              <p>
+                <span className="font-semibold">Name:</span> {task.userName}
+              </p>
+              <p>
+                <span className="font-semibold">Age:</span> {task.userAge}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span> {task.userEmail}
+              </p>
+            </div>
+
+            <div className="w-full">
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Comments
+              </h2>
+              <ul className="space-y-2">
+                {task.comments.map((comment) => (
+                  <li
+                    key={comment.id}
+                    className="bg-gray-100 py-2 px-4 rounded-lg text-gray-700"
+                  >
+                    {comment.commentName}
+                  </li>
+                ))}
+              </ul>
+              {task.isComment && (
+                <input
+                  type="text"
+                  placeholder="Enter your comment"
+                  className="w-full border border-gray-300 outline-none py-2 px-4 rounded-lg mt-4 placeholder-gray-500 focus:ring-2 focus:ring-blue-400"
+                  ref={commentRef}
+                  onKeyDown={(e) => handleOnAddComments(e.key)}
+                />
+              )}
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => handleOnDelete(task.id)}
+                className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-600 transition duration-300"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => handleOnCommentsButtonClick(task.id)}
+                className="flex-1 bg-yellow-400 text-white py-2 px-4 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300"
+              >
+                Comment
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
