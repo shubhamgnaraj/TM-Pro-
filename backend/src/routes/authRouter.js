@@ -1,8 +1,10 @@
 const express = require("express");
 const authRouter = express.Router();
-const authController = require('../controller/authController')
+const authController = require('../controller/authController');
+const upload = require("../middleware/multer");
 
-authRouter.post("/sign-up", authController.registerUser)
+authRouter.post("/manager/add-user",upload.single("photo"), authController.registerUser)
 
-authRouter.post("/login", authController.loginUser)
+authRouter.post("/employee/login", authController.loginUser)
+
 module.exports = authRouter;

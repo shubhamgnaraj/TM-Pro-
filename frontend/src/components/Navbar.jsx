@@ -3,61 +3,72 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const { isAuthentication } = useSelector((state) => state.tasks);
-  // console.log(isAuthentication)
-
+  const token = localStorage.getItem("token");
   return (
-    <header className="w-full py-1 px-5">
-      <div className="w-full flex justify-between items-center">
-        <div>
-          <Link to="/">
-            <img src="/images/taskLogo.png" className="w-20 " alt="Task-Logo" />
-          </Link>
-        </div>
+    <header className="w-full bg-gradient-to-br from-blue-700 via-teal-500 to-green-400 py-2 px-6">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src="/images/taskLogo.png"
+            className="w-14 object-contain"
+            alt="Task-Logo"
+          />
+        </Link>
 
-        <div className="flex gap-x-3 items-center">
+        {/* Navigation Links */}
+        <nav className="flex gap-2 md:gap-4 items-center">
           <Link
-            to="/task/home"
-            className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            to="/manager/dashboard"
+            className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
           >
             Home
           </Link>
           <Link
-            to="/task/profile"
-            className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            to="/employee/profile"
+            className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
           >
             Profile
           </Link>
           <Link
-            to="/task/add-task"
-            className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            to="/manager/send-task-employee"
+            className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
           >
-            Add-Task
+            Send Task
           </Link>
           <Link
             to="/task/setting"
-            className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
           >
             Setting
           </Link>
-        </div>
-
-
-        <div className="flex gap-x-3 items-center">
           <Link
-            to="/auth/login"
-           className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            to="/manager/add-user"
+            className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
           >
-            Log-In
+            Add User
           </Link>
-          <Link
-            to="/auth/sign-up"
-            className=" py-1 px-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
-          >
-            Sign-Up
-          </Link>
+        </nav>
+
+        {/* Auth Button */}
+        <div>
+          {token ? (
+            <Link
+              to="/employee/logout"
+              className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            >
+              Log Out
+            </Link>
+          ) : (
+            <Link
+              to="/employee/login"
+              className="py-1.5 px-4 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-semibold text-sm shadow hover:scale-105 transition"
+            >
+              Log In
+            </Link>
+          )}
         </div>
-      </div>
+      </div> 
     </header>
   );
 }

@@ -1,17 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL } from "../config";
+import { authFetch } from "../utils/authFetch";
+
 
 export const addItemsToServer = createAsyncThunk(
   "data/AddDataToServer",
   async (items, thunkAPI) => {
-    // Add thunkAPI parameter
+    const token = localStorage.getItem("token")
     try {
-      const response = await fetch("http://localhost:3000/task/add-task", {
+      const response = await authFetch(`${BASE_URL}/manager/send-task-employee`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(items),
-      });
+      }
+      )
 
       if (!response.ok) {
         throw new Error("Failed to add task");
@@ -28,8 +33,29 @@ export const addItemsToServer = createAsyncThunk(
 export const getItemsFromServer = createAsyncThunk(
   "data/getDataFromServer",
   async (thunkAPI) => {
-    const response = await fetch("http://localhost:3000/task/home");
+    const response = await fetch(`${BASE_URL}/task/home`);
 
     return await response.json();
   }
 );
+
+export const fetchAllEmployees = createAsyncThunk(
+  "data/getFetchAllUser",
+  async (thunkAPI) => {
+    const response = await authFetch(`${BASE_URL}/manager/dashboard`);
+
+    const data = await response.json();
+    return data;
+  }
+);
+
+export const addAllEmployeeInFrontend = createAsyncThunk(
+  "data/addAllEmployee",
+  async (employeeId, thunkAPI) => {
+    const token = localStorage.getItem("token")
+    const response = await authFetch(`${BASE_URL}/employee/dashboard/${employeeId}`)
+
+    const data = await response.json();
+    return data;
+  }
+)

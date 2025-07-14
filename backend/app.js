@@ -4,42 +4,49 @@ const cors = require("cors");
 const session = require("express-session");
 const helmet = require("helmet");
 require("dotenv").config();
-
-// Validate environment variables
-if (!process.env.SESSION_SECRET_KEY || !process.env.MONGO_URI) {
-  console.error(
-    "Missing required environment variables. Please check your .env file."
-  );
-  process.exit(1);
-}
+const multer = require("multer")
+const path = require("path")
 
 // External modules
 const { errorController } = require("./src/controller/error");
 const taskRouter = require("./src/routes/taskRouter");
 const authRouter = require("./src/routes/authRouter");
+const verifyToken = require("./src/middleware/verifyToken")
 // const { collection } = require("./src/model/home");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
 // Middleware
-app.use(helmet());
+app.use(cors());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "http://localhost:3000", "data:"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  },
+}));;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads'), {
+  setHeaders: (req, path, stat) => {
+     req.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 
-app.use("/auth", authRouter);
+app.use(authRouter);
 
-app.use(taskRouter);
+app.use(verifyToken, taskRouter);
+
 
 app.use(errorController);
-
 // MongoDB connect
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(PORT, () => {

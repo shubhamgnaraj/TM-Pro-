@@ -1,6 +1,7 @@
 const { validationResult, check } = require("express-validator");
-const User = require("../model/user");
-const bcrypt = require("bcryptjs")
+const Employee = require("../model/employee");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.registerUser = [
   check("firstname")
@@ -49,52 +50,63 @@ exports.registerUser = [
       }
 
       const { firstname, lastname, email, password } = req.body;
+      const photo = req.file?.filename;
 
-      const existingUser = await User.findOne({email});
-      if(existingUser) {
-        return res.status(400).json({message: "user already exists"})
+      console.log("req.file: ", req.file);
+      console.log("req.body: ", req.body);
+
+      const existingEmployee = await Employee.findOne({ email });
+      if (existingEmployee) {
+        return res.status(400).json({ message: "Employee already exists" });
       }
 
-      const user = new User({
+      const employeeData = new Employee({
         firstname,
         lastname,
+        photo,
         email,
         password,
       });
 
-      const savedUser = await user.save();
+      const savedEmployeeData = await employeeData.save();
 
       res.status(201).json({
-        message: "user created successfully",
-        user: savedUser
-      })
+        errors: errors.array(),
+        message: "Employee created successfully",
+        user: savedEmployeeData,
+      });
     } catch (error) {
-        console.error("registration error: ", error)
-        res.status(500).json({message: 'server error during registration'})
+      console.error("registration error: ", error);
+      res.status(500).json({ message: "server error during registration" });
     }
   },
 ];
 
 exports.loginUser = async (req, res, next) => {
-    console.log(req.body)
-    const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
+  const { email, password } = req.body;
+  try {
+    const employee = await Employee.findOne({ email });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        if (user.password !== password) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        res.status(200).json({
-            message: "Login successful",
-        });
-
-    } catch (error) {
-        console.error("Login error: ", error);
-        res.status(500).json({ message: "Server error during login" });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
     }
+
+    const isMatch = await bcrypt.compare(password, employee.password);
+    if (!isMatch) return res.status(404).json({ message: "Invalid Password" });
+
+    const jwtSecret = process.env.JWT_SECRET;
+    const token = jwt.sign({ id: employee._id }, jwtSecret, {
+      expiresIn: "3h",
+    });
+
+    res.status(200).json({
+      token,
+      message: "Login successful",
+      employee,
+      tasks: employee.tasks,
+    });
+  } catch (error) {
+    console.error("Login error: ", error);
+    res.status(500).json({ message: "Server error during login" });
+  }
 };
