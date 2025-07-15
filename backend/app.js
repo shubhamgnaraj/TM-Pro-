@@ -1,9 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const session = require("express-session");
 const helmet = require("helmet");
-require("dotenv").config();
 const multer = require("multer")
 const path = require("path")
 
@@ -13,7 +11,6 @@ const taskRouter = require("./src/routes/taskRouter");
 const authRouter = require("./src/routes/authRouter");
 const verifyToken = require("./src/middleware/verifyToken")
 // const { collection } = require("./src/model/home");
-const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -39,28 +36,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads'), {
 }));
 
 app.use(authRouter);
-
 app.use(verifyToken, taskRouter);
 
 
 app.use(errorController);
-// MongoDB connect
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(PORT, () => {
-      console.log(`Server started at http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB:", error.message);
-    process.exit(1);
-  });
 
-// Graceful shutdown
-process.on("SIGINT", async () => {
-  console.log("Shutting down gracefully...");
-  await mongoose.connection.close();
-  process.exit(0);
-});
+
+module.exports = app;
+

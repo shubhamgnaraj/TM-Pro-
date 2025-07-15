@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addAllEmployeeInFrontend,
+  getLoggedInEmployee,
   getItemsFromServer,
 } from "../../service/service";
 import { BASE_URL } from "../../config";
@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router";
 
 function EmployeeDashboard() {
-  const { isLoading, employeeInfo } = useSelector((state) => state.user);
+  const { isLoading, loggedEmployee } = useSelector((state) => state.user);
   const [tasks, setTasks] = useState([]);
 
   const token = localStorage.getItem("token");
@@ -18,15 +18,15 @@ function EmployeeDashboard() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && !employeeInfo) {
-      dispatch(addAllEmployeeInFrontend(decode.id));
+    if (token && !loggedEmployee) {
+      dispatch(getLoggedInEmployee(decode.id));
     }
   }, [dispatch]);
 
-  if (!employeeInfo) return <p>Loading employee data...</p>;
-  console.log(employeeInfo.photo);
+  if (!loggedEmployee) return <p>Loading employee data...</p>;
+  console.log(loggedEmployee.photo);
 
-  console.log(employeeInfo.photo);
+  console.log(loggedEmployee.photo);
 
   const handleOnTaskAceepted = (taskId) => {
     setTasks((prevTasks) => {
@@ -41,14 +41,14 @@ function EmployeeDashboard() {
       <div className=" w-full h-[35%] flex items-center justify-between py-4 px-8">
         <div className="flex flex-col items-center">
           <img
-            src={`${BASE_URL}/uploads/${employeeInfo.photo}`}
+            src={`${BASE_URL}/uploads/${loggedEmployee.photo}`}
             alt="Employee"
             className="w-16 h-16 rounded-full shadow-[0_0_15px_#00f5c6] ring-4 ring-[#00f5c6] hover:scale-105 transition duration-300 object-center"
           />
 
         <h1 className="text-sm mt-2 font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
           <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
-            {employeeInfo.firstname + " " + employeeInfo.lastname} 
+            {loggedEmployee.firstname + " " + loggedEmployee.lastname} 
           </span>
         </h1>
         </div>
@@ -63,7 +63,7 @@ function EmployeeDashboard() {
             Accepted Tasks
           </span>
         </h1>
-        {isLoading || !employeeInfo ? (
+        {isLoading || !loggedEmployee ? (
           <div className="flex justify-center items-center min-h-[40vh]">
             <div className="w-16 h-16 border-8 border-t-8 border-t-teal-400 border-blue-500 rounded-full animate-spin shadow-xl"></div>
           </div>

@@ -9,8 +9,7 @@ import { fetchAllEmployees } from "../../service/service";
 function ManagerDashboard() {
   const [users, setUsers] = useState(null);
 
-  const employees = useSelector((state) => state.user.employees);
-  console.log(employees);
+  const {employeeInfo} = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -22,25 +21,18 @@ function ManagerDashboard() {
       <Navbar />
 
       <div className="flex justify-around items-center min-h-[80vh] px-6 py-4 flex-wrap gap-6 mt-5">
-        {employees && employees.length > 0 ? (
-          employees.map((employee) => {
-            const totalTasks = employee.tasks?.length || 0;
-            const acceptedTasks =
-              employee.tasks?.filter((task) => task.status === "accepted")
-                .length || 0;
-            const pendingTasks =
-              employee.tasks?.filter((task) => task.status === "pending")
-                .length || 0;
-
-            return (
+        {employeeInfo && employeeInfo.length > 0 ? (
+          employeeInfo.map((employee) => {
+            if(employee.position === 'employee') {
+              return (
               <div
-                key={employee.id}
+                key={employee._id}
                 className="bg-white rounded-xl shadow-lg p-6 w-80 flex flex-col gap-4 hover:shadow-2xl transition-shadow duration-200"
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-2 rounded-full">
+                  <Link to={`/messages/:${employee._id}`} className="bg-blue-100 p-2 rounded-full">
                     <BiMessageRounded className="text-blue-500 text-2xl" />
-                  </div>
+                  </Link>
                   <div>
                     <h2 className="text-lg font-semibold text-gray-800 capitalize">
                       {employee.firstname + " " + employee.lastname}
@@ -51,20 +43,21 @@ function ManagerDashboard() {
                 <div className="flex justify-between mt-4">
                   <div className="flex flex-col items-center">
                     <span className="text-gray-500 text-xs">Total</span>
-                    <span className="text-xl font-bold text-gray-800">
-                      {totalTasks}
+                    <span className="font-bold text-green-500 text-2xl p-2">
+                      0
                     </span>
                   </div>
                   <div className="flex flex-col items-center">
                     <span className="text-gray-500 text-xs">Accepted</span>
-                    <span className="text-xl font-bold text-green-600">
-                      {acceptedTasks}
+                    <span className="font-bold text-yellow-500 text-2xl p-2">
+                      0
                     </span>
+                    
                   </div>
                   <div className="flex flex-col items-center">
                     <span className="text-gray-500 text-xs">Pending</span>
-                    <span className="text-xl font-bold text-yellow-500">
-                      {pendingTasks}
+                    <span className="font-bold text-red-500 text-2xl p-2">
+                      0
                     </span>
                   </div>
                 </div>
@@ -76,6 +69,7 @@ function ManagerDashboard() {
                 </Link>
               </div>
             );
+            }
           })
         ) : (
           <div className="relative w-24 h-24">

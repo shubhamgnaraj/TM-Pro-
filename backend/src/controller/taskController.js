@@ -36,7 +36,7 @@ exports.getEmployeeTask = async (req, res) => {
   try {
     const { employeeId } = req.params;
 
-    const employee = await employee.findById(employeeId);
+    const employee = await Employee.findById(employeeId);
 
     res.json({ tasks: employee ? employee : [] });
   } catch (error) {

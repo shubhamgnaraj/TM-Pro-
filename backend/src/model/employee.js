@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const taskSchema = require("./tasks");
 const bcrypt = require("bcryptjs");
+const messageSchema = require("./message");
 
 const employeeSchema = new mongoose.Schema({
   firstname: {
@@ -22,10 +23,16 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  position: {
+    type: String,
+    required: true,
+    enum: ["employee", "manager"],
+  },
   tasks: [taskSchema],
+  messages: [messageSchema]
 });
 
-employeeSchemaSchema.pre("save", async function () {
+employeeSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 module.exports = mongoose.model("Employee", employeeSchema);

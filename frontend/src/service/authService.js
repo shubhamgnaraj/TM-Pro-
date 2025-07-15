@@ -12,6 +12,7 @@ export const registerUserFromServer = createAsyncThunk(
       formData.append("password", employeeInfo.password);
       formData.append("confirmPassword", employeeInfo.confirmPassword);
       formData.append("photo", employeeInfo.photo);
+      formData.append("position", employeeInfo.position)
 
       const response = await fetch(`${BASE_URL}/manager/add-user`, {
         method: "POST",

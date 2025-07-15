@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../service/authService";
 import { jwtDecode } from "jwt-decode";
-import { addAllEmployeeInFrontend } from "../../service/service";
+import { getLoggedInEmployee } from "../../service/service";
 
 function EmployeeLogin() {
   const [email, setEmail] = useState("");
@@ -26,8 +26,7 @@ function EmployeeLogin() {
       .unwrap()
       .then((data) => {
         localStorage.setItem("token", data.token);
-        // const decode = jwtDecode(data.token);
-        // dispatch(addAllEmployeeInFrontend(decode.id));
+        localStorage.setItem("position", data.employee.position);
 
         setError(data.message);
         navigate("/employee/dashboard");

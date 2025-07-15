@@ -49,7 +49,8 @@ exports.registerUser = [
         return res.status(422).json({ errors: errors.array() });
       }
 
-      const { firstname, lastname, email, password } = req.body;
+      const { firstname, lastname, email, password, position } = req.body;
+      console.log(req.body)
       const photo = req.file?.filename;
 
       console.log("req.file: ", req.file);
@@ -66,6 +67,7 @@ exports.registerUser = [
         photo,
         email,
         password,
+        position
       });
 
       const savedEmployeeData = await employeeData.save();

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addItemsToServer, getItemsFromServer, fetchAllEmployees, addAllEmployeeInFrontend } from "../service/service";
+import { addItemsToServer, getItemsFromServer, fetchAllEmployees, getLoggedInEmployee } from "../service/service";
 import { registerUserFromServer } from "../service/authService";
 import { loginUser } from "../service/authService";
 
@@ -7,7 +7,7 @@ import { loginUser } from "../service/authService";
 
 const initialState = {
   employeeInfo: null,
-  employees: [],
+  loggedEmployee: null,
   isLoading: false,
   error: null,
   isAuthentication: false,
@@ -25,7 +25,6 @@ const tasksSlice = createSlice({
       })
       .addCase(addItemsToServer.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.tasks = action.payload;
         state.isAuthentication = true;
       })
       .addCase(addItemsToServer.rejected, (state, action) => {
@@ -85,19 +84,21 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchAllEmployees.fulfilled, (state, action) =>{
         state.isLoading = false;
+        state.employeeInfo = action.payload.user
+
       })
       .addCase(fetchAllEmployees.rejected, (state) => {
         state.isLoading = false;
       });
 
-      builder.addCase(addAllEmployeeInFrontend.pending, (state ) => {
+      builder.addCase(getLoggedInEmployee.pending, (state ) => {
         state.isLoading = true
       })
-      .addCase(addAllEmployeeInFrontend.fulfilled, (state, action) => {
+      .addCase(getLoggedInEmployee.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.employeeInfo = action.payload.tasks;
+        state.loggedEmployee = action.payload.tasks;
       })
-      .addCase(addAllEmployeeInFrontend.rejected, (state) =>{
+      .addCase(getLoggedInEmployee.rejected, (state) =>{
         state.isLoading = true;
       })
   },

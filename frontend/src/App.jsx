@@ -9,6 +9,7 @@ import EmployeeLogin from "./page/auth/EmployeeLogin";
 import ManagerLogin from "./page/auth/ManagerLogin";
 import PrivacyComp from "./components/PrivacyComp";
 import ViewDetail from "./page/ViewDetail";
+import MessagesEmpVsMan from "./page/MessagesEmpVsMan";
 
 function App() {
   return (
@@ -36,14 +37,9 @@ function App() {
               <ViewDetail />
             </PrivacyComp>
           }
-          />
-
-        <Route
-          path="/manager/add-user"
-          element={
-              <SignUp />
-          }
         />
+
+        <Route path="/manager/add-user" element={<SignUp />} />
         <Route
           path="/manager/dashboard"
           element={
@@ -57,6 +53,15 @@ function App() {
           element={
             <PrivacyComp>
               <SendTaskEmployee />
+            </PrivacyComp>
+          }
+        />
+
+        <Route
+          path="/messages"
+          element={
+            <PrivacyComp>
+              <MessagesEmpVsMan />
             </PrivacyComp>
           }
         />
