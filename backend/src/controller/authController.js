@@ -97,7 +97,7 @@ exports.loginUser = async (req, res, next) => {
     if (!isMatch) return res.status(404).json({ message: "Invalid Password" });
 
     const jwtSecret = process.env.JWT_SECRET;
-    const token = jwt.sign({ id: employee._id }, jwtSecret, {
+    const token = jwt.sign({ id: employee._id, position: employee.position}, jwtSecret, {
       expiresIn: "3h",
     });
 

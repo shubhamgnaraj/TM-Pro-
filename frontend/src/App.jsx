@@ -58,7 +58,7 @@ function App() {
         />
 
         <Route
-          path="/messages"
+          path="/messages/:id"
           element={
             <PrivacyComp>
               <MessagesEmpVsMan />

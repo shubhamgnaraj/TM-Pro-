@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { addItemsToServer, fetchAllEmployees } from "../../service/service";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -12,7 +12,8 @@ function SendTaskEmployee() {
   const [date, setDate] = useState("");
   const [employeeId, setEmployeeId] = useState("");
 
-  const { employees } = useSelector((state) => state.user);
+  const { employeeInfo } = useSelector((state) => state.user);
+  const employees = employeeInfo?.filter((em) => em.position === "employee");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function SendTaskEmployee() {
   const handleOnAddTaskForm = (e) => {
     e.preventDefault();
 
-    console.log(employeeId)
+    console.log(employeeId);
     const taskData = {
       employeeId,
       title,
@@ -214,7 +215,7 @@ function SendTaskEmployee() {
                 className="outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-2"
               >
                 <option value="">Select employee...</option>
-                {employees.map((emp) => (
+                {employees?.map((emp) => (
                   <option
                     key={emp._id}
                     value={emp._id}

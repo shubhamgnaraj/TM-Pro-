@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../service/authService";
 
 function ManagerLogin() {
   const [email, setEmail] = useState("");
@@ -37,31 +35,10 @@ function ManagerLogin() {
         <div className="flex flex-col items-center mb-6">
           <div className="bg-gradient-to-tr from-blue-500 to-green-400 rounded-full p-3 shadow-lg mb-2">
             {/* Briefcase Icon for Manager */}
-            <svg
-              className="w-12 h-12 text-white"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <rect
-                x="3"
-                y="7"
-                width="18"
-                height="13"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-              <path
-                d="M16 7V5a4 4 0 0 0-8 0v2"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-            </svg>
+           
           </div>
           <h1 className="text-4xl font-extrabold text-white mb-1 drop-shadow-lg">
-            Manager Login
+            
           </h1>
           <p className="text-white/80 text-sm font-medium">
             Welcome back! Please login to your manager dashboard.
@@ -88,7 +65,7 @@ function ManagerLogin() {
               autoComplete="username"
               onChange={(e) => setEmail(e.target.value)}
               className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-              placeholder="manager@company.com"
+              placeholder=""
               required
             />
           </div>

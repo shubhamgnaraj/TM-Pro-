@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
+import { BiMessageRounded } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getLoggedInEmployee,
-  getItemsFromServer,
-} from "../../service/service";
+import { getLoggedInEmployee } from "../../service/service";
 import { BASE_URL } from "../../config";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router";
 
 function EmployeeDashboard() {
-  const { isLoading, loggedEmployee } = useSelector((state) => state.user);
   const [tasks, setTasks] = useState([]);
+  const { isLoading, loggedEmployee } = useSelector((state) => state.user);
 
   const token = localStorage.getItem("token");
   const decode = jwtDecode(token);
@@ -24,10 +22,6 @@ function EmployeeDashboard() {
   }, [dispatch]);
 
   if (!loggedEmployee) return <p>Loading employee data...</p>;
-  console.log(loggedEmployee.photo);
-
-  console.log(loggedEmployee.photo);
-
   const handleOnTaskAceepted = (taskId) => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
@@ -38,24 +32,27 @@ function EmployeeDashboard() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-600 via-teal-400 to-green-400 relative overflow-x-hidden">
-      <div className=" w-full h-[35%] flex items-center justify-between py-4 px-8">
-        <div className="flex flex-col items-center">
+      <div className=" w-full h-[35%] flex items-center justify-between px-8 py-4">
+        <div className="flex items-center gap-x-4 ">
           <img
             src={`${BASE_URL}/uploads/${loggedEmployee.photo}`}
             alt="Employee"
             className="w-16 h-16 rounded-full shadow-[0_0_15px_#00f5c6] ring-4 ring-[#00f5c6] hover:scale-105 transition duration-300 object-center"
           />
 
-        <h1 className="text-sm mt-2 font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
-          <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
-            {loggedEmployee.firstname + " " + loggedEmployee.lastname} 
-          </span>
-        </h1>
+          <h1 className="text-sm mt-2 font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
+            <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
+              {loggedEmployee.firstname + " " + loggedEmployee.lastname}
+            </span>
+          </h1>
         </div>
 
-        <div className="">
-          <Link to="/employee/logout"></Link>
-        </div>
+        <Link
+          to={`/messages/${loggedEmployee?._id}`}
+          className="bg-blue-100 p-2 rounded-full"
+        >
+          <BiMessageRounded className="text-blue-500 text-2xl" />
+        </Link>
       </div>
       <div className="flex flex-col items-center min-h-screen py-5 px-4">
         <h1 className="text-4xl font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
@@ -69,7 +66,7 @@ function EmployeeDashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
-            {tasks ? (
+            {!loggedEmployee?.tasks ? (
               <div className="col-span-full flex flex-col items-center justify-center py-16">
                 <div className="text-6xl mb-4">🎉</div>
                 <p className="text-lg text-white/80 font-medium">
@@ -77,7 +74,7 @@ function EmployeeDashboard() {
                 </p>
               </div>
             ) : (
-              tasks.map((task) => (
+              loggedEmployee?.tasks.map((task) => (
                 <div
                   key={task._id}
                   className="bg-blue-200  rounded-lg p-6 shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200 flex flex-col justify-between min-h-[220px]"

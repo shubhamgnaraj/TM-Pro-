@@ -30,7 +30,7 @@ function ManagerDashboard() {
                 className="bg-white rounded-xl shadow-lg p-6 w-80 flex flex-col gap-4 hover:shadow-2xl transition-shadow duration-200"
               >
                 <div className="flex items-center gap-3">
-                  <Link to={`/messages/:${employee._id}`} className="bg-blue-100 p-2 rounded-full">
+                  <Link to={`/messages/${employee._id}`}  className="bg-blue-100 p-2 rounded-full">
                     <BiMessageRounded className="text-blue-500 text-2xl" />
                   </Link>
                   <div>
