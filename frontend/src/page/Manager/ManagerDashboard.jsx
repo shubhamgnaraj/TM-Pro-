@@ -9,13 +9,14 @@ import { fetchAllEmployees } from "../../service/service";
 function ManagerDashboard() {
   const [users, setUsers] = useState(null);
 
-  const {employeeInfo} = useSelector((state) => state.user);
+  const { employeeInfo } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAllEmployees());
   }, []);
+
   return (
     <div className="bg-gradient-to-br from-blue-500 via-teal-400 to-green-500 min-h-screen w-full relative">
       <Navbar />
@@ -23,52 +24,54 @@ function ManagerDashboard() {
       <div className="flex justify-around items-center min-h-[80vh] px-6 py-4 flex-wrap gap-6 mt-5">
         {employeeInfo && employeeInfo.length > 0 ? (
           employeeInfo.map((employee) => {
-            if(employee.position === 'employee') {
+            if (employee.position === "employee") {
               return (
-              <div
-                key={employee._id}
-                className="bg-white rounded-xl shadow-lg p-6 w-80 flex flex-col gap-4 hover:shadow-2xl transition-shadow duration-200"
-              >
-                <div className="flex items-center gap-3">
-                  <Link to={`/messages/${employee._id}`}  className="bg-blue-100 p-2 rounded-full">
-                    <BiMessageRounded className="text-blue-500 text-2xl" />
-                  </Link>
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-800 capitalize">
-                      {employee.firstname + " " + employee.lastname}
-                    </h2>
-                    <p className="text-sm text-gray-500">{employee.email}</p>
-                  </div>
-                </div>
-                <div className="flex justify-between mt-4">
-                  <div className="flex flex-col items-center">
-                    <span className="text-gray-500 text-xs">Total</span>
-                    <span className="font-bold text-green-500 text-2xl p-2">
-                      0
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-gray-500 text-xs">Accepted</span>
-                    <span className="font-bold text-yellow-500 text-2xl p-2">
-                      0
-                    </span>
-                    
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-gray-500 text-xs">Pending</span>
-                    <span className="font-bold text-red-500 text-2xl p-2">
-                      0
-                    </span>
-                  </div>
-                </div>
-                <Link
-                  to={`/employee/view-details/${employee.id}`}
-                  className="mt-4 text-blue-600 hover:underline text-sm font-medium self-end"
+                <div
+                  key={employee._id}
+                  className="bg-white rounded-xl shadow-lg p-6 w-80 flex flex-col gap-4 hover:shadow-2xl transition-shadow duration-200"
                 >
-                  View Details
-                </Link>
-              </div>
-            );
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to={`/messages/${employee._id}`}
+                      className="bg-blue-100 p-2 rounded-full"
+                    >
+                      <BiMessageRounded className="text-blue-500 text-2xl" />
+                    </Link>
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-800 capitalize">
+                        {employee.firstname + " " + employee.lastname}
+                      </h2>
+                      <p className="text-sm text-gray-500">{employee.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between mt-4">
+                    <div className="flex flex-col items-center">
+                      <span className="text-gray-500 text-xs">Total</span>
+                      <span className="font-bold text-green-500 text-2xl p-2">
+                        0
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-gray-500 text-xs">Accepted</span>
+                      <span className="font-bold text-yellow-500 text-2xl p-2">
+                        0
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-gray-500 text-xs">Pending</span>
+                      <span className="font-bold text-red-500 text-2xl p-2">
+                        0
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    to={`/view-details/${employee._id}`}
+                    className="mt-4 text-blue-600 hover:underline text-sm font-medium self-end"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              );
             }
           })
         ) : (

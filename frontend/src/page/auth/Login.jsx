@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../service/authService";
 
-function EmployeeLogin() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [manager, setManager] = useState(false);
@@ -145,7 +145,7 @@ function EmployeeLogin() {
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 via-teal-400 to-green-400 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
           >
-            {manager ? "Manager-Login" : "EmployeeLogin"}
+            {manager ? "Manager-Login" : "login"}
           </button>
         </form>
         <div className="flex justify-between items-center mt-4">
@@ -184,4 +184,4 @@ function EmployeeLogin() {
   );
 }
 
-export default EmployeeLogin;
+export default Login;

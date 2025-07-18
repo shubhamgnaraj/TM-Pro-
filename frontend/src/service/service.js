@@ -71,3 +71,24 @@ export const getLoggedInEmployee = createAsyncThunk(
     return data;
   }
 );
+
+export const fetchAllMessages = async (chatId) => {
+  try {
+    const token = localStorage.getItem("token")
+    if(chatId) {
+      const response = await fetch(`${BASE_URL}/messages/${chatId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      if(!response.ok) throw new Error("Faild to fetch messages")
+
+        const data =  await response.json()
+
+        return data
+    }
+  } catch (error) {
+    console.log("Error fetching messages: ", error)
+  }
+}

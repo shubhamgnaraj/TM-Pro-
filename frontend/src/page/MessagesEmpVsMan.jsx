@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SendHorizonal } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import { fetchAllEmployees, getLoggedInEmployee } from "../service/service";
+import { fetchAllEmployees, fetchAllMessages, getLoggedInEmployee } from "../service/service";
 import socket from "../utils/socket";
 import { useParams } from "react-router";
-import { current } from "@reduxjs/toolkit";
-import { authFetch } from "../utils/authFetch";
-import { BASE_URL } from "../config";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const MessagesEmpVsMan = () => {
   const [messages, setMessages] = useState([]);
@@ -29,32 +27,19 @@ const MessagesEmpVsMan = () => {
   const chatId = receiverId ? [senderId, receiverId].sort().join("_") : "";
 
   useEffect(() => {
-    const fecthAllMessages = async () => {
-      try {
-        const token = localStorage.getItem("token")
-        if (chatId) {
-          const response = await authFetch(`${BASE_URL}/messages/${chatId}`);
-          if (!response.ok) throw new Error("Failed to fetch messages");
-
-          const data = await response.json();
-          setMessages(data)
-        }
-      } catch (err) {
-        console.error("Error fetching messages:", err.message);
-      }
-    };
-    fecthAllMessages();
+    fetchAllMessages(chatId).then((data) => setMessages(data))
   }, [chatId]);
 
   useEffect(() => {
-    if (chatId) {
-      socket.emit("joinRoom", chatId);
-    }
+    if (!chatId) return;
+
+    socket.emit("joinRoom", chatId);
 
     const handleReceive = (msg) => {
       setMessages((prev) => [...prev, msg]);
     };
 
+    socket.off("receiveMessage")
     socket.on("receiveMessage", handleReceive);
 
     return () => {
@@ -81,7 +66,7 @@ const MessagesEmpVsMan = () => {
     }
   }, []);
   if (!loggedEmployee) return <p>Loading employee data...</p>;
-  console.log(loggedEmployee)
+  console.log(messages)
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-600 via-teal-400 to-green-400 relative overflow-x-hidden py-5 px-10">
@@ -107,14 +92,21 @@ const MessagesEmpVsMan = () => {
       </div>
 
       <div>
-        <div className="h-[90vh] w-full max-w-lg mx-auto flex flex-col shadow-2xl rounded-xl bg-gradient-to-br from-blue-100 to-purple-200 font-poppins ">
+        <div className="  h-[90vh] w-full max-w-lg mx-auto flex flex-col shadow-2xl rounded-xl bg-gradient-to-br from-blue-100 to-purple-200 font-poppins ">
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-t-xl text-lg font-medium shadow-md">
-            💬 Chat Between Manager & Employee
+
+          <div className="w-full flex items-center px-2 justify-between bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-t-xl shadow-md">
+            <div className=" text-lg font-medium ">
+              💬 Chat Between Manager & Employee
+            </div>
+
+            <div className="bg-[#a37bf4c2] rounded-full p-2 cursor-pointer">
+              <BsThreeDotsVertical />
+            </div>
           </div>
 
           {/* Chat area */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 chatBox">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -148,7 +140,8 @@ const MessagesEmpVsMan = () => {
             <button
               onClick={handleSend}
               className={`bg-indigo-600 p-3 rounded-full text-white hover:bg-indigo-700 ${
-                !managerId || loggedEmployee.position === "manager" && "opacity-50 cursor-not-allowed"
+                !managerId || !isEmployee &&
+                  "opacity-50 cursor-not-allowed"
               }`}
             >
               <SendHorizonal size={20} />

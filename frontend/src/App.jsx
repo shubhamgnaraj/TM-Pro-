@@ -5,57 +5,68 @@ import SendTaskEmployee from "./page/Manager/SendTaskEmployee";
 import EmployeeDashboard from "./page/Employee/EmoployeeDashboard";
 import ManagerDashboard from "./page/Manager/ManagerDashboard";
 import SignUp from "./page/auth/SignUp";
-import EmployeeLogin from "./page/auth/EmployeeLogin";
-import ManagerLogin from "./page/auth/ManagerLogin";
+import Login from "./page/auth/Login";
 import PrivacyComp from "./components/PrivacyComp";
 import ViewDetail from "./page/ViewDetail";
 import MessagesEmpVsMan from "./page/MessagesEmpVsMan";
+import { jwtDecode } from "jwt-decode";
 
 function App() {
+  const token = localStorage.getItem("token");
+  let decode = null;
+  
+  if(token) {
+    decode = jwtDecode(token)
+  } else {
+    decode = {position: ""}
+  }
+
   return (
     <div className="w-full h-screen overflow-hidden">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/employee/login" element={<Login />} />
 
-        {/* auth section */}
-        <Route path="/employee/login" element={<EmployeeLogin />} />
-        <Route path="/manager/login" element={<ManagerLogin />} />
+        {decode.position === "employee" && (
+          <Route
+            path="/employee/dashboard"
+            element={
+              <PrivacyComp>
+                <EmployeeDashboard />
+              </PrivacyComp>
+            }
+          />
+        )}
 
-        <Route
-          path="/employee/dashboard"
-          element={
-            <PrivacyComp>
-              <EmployeeDashboard />
-            </PrivacyComp>
-          }
-        />
-
-        <Route
-          path="/employee/view-detail"
-          element={
-            <PrivacyComp>
-              <ViewDetail />
-            </PrivacyComp>
-          }
-        />
-
-        <Route path="/manager/add-user" element={<SignUp />} />
-        <Route
-          path="/manager/dashboard"
-          element={
-            <PrivacyComp>
-              <ManagerDashboard />
-            </PrivacyComp>
-          }
-        />
-        <Route
-          path="/manager/send-task-employee"
-          element={
-            <PrivacyComp>
-              <SendTaskEmployee />
-            </PrivacyComp>
-          }
-        />
+        {decode.position === "manager" && (
+          <>
+              <Route
+                path="/manager/dashboard"
+                element={
+                  <PrivacyComp>
+                    <ManagerDashboard />
+                  </PrivacyComp>
+                }
+              />
+            <Route
+              path="/view-details/:id"
+              element={
+                <PrivacyComp>
+                  <ViewDetail />
+                </PrivacyComp>
+              }
+            />
+            <Route path="/manager/add-user" element={<SignUp />} />
+            <Route
+              path="/manager/send-task-employee"
+              element={
+                <PrivacyComp>
+                  <SendTaskEmployee />
+                </PrivacyComp>
+              }
+            />
+          </>
+        )}
 
         <Route
           path="/messages/:id"
