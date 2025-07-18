@@ -6,6 +6,8 @@ import { fetchAllEmployees, getLoggedInEmployee } from "../service/service";
 import socket from "../utils/socket";
 import { useParams } from "react-router";
 import { current } from "@reduxjs/toolkit";
+import { authFetch } from "../utils/authFetch";
+import { BASE_URL } from "../config";
 
 const MessagesEmpVsMan = () => {
   const [messages, setMessages] = useState([]);
@@ -27,6 +29,24 @@ const MessagesEmpVsMan = () => {
   const chatId = receiverId ? [senderId, receiverId].sort().join("_") : "";
 
   useEffect(() => {
+    const fecthAllMessages = async () => {
+      try {
+        const token = localStorage.getItem("token")
+        if (chatId) {
+          const response = await authFetch(`${BASE_URL}/messages/${chatId}`);
+          if (!response.ok) throw new Error("Failed to fetch messages");
+
+          const data = await response.json();
+          setMessages(data)
+        }
+      } catch (err) {
+        console.error("Error fetching messages:", err.message);
+      }
+    };
+    fecthAllMessages();
+  }, [chatId]);
+
+  useEffect(() => {
     if (chatId) {
       socket.emit("joinRoom", chatId);
     }
@@ -44,17 +64,16 @@ const MessagesEmpVsMan = () => {
 
   const handleSend = () => {
     if (input.trim() === "") return;
-    console.log("Sending:", { input, chatId, senderId, receiverId });
 
     socket.emit("sendMessage", {
       chatId,
       senderId,
       receiverId,
-      text: input,
+      content: input,
     });
+    setInput("");
   };
 
-  console.log(messages)
   useEffect(() => {
     if (token) {
       dispatch(getLoggedInEmployee(decode.id));
@@ -62,22 +81,27 @@ const MessagesEmpVsMan = () => {
     }
   }, []);
   if (!loggedEmployee) return <p>Loading employee data...</p>;
+  console.log(loggedEmployee)
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-600 via-teal-400 to-green-400 relative overflow-x-hidden py-5 px-10">
       <div>
-        { loggedEmployee?.position === "employee" && (
+        {loggedEmployee?.position === "employee" && (
           <select
             className="mb-4 "
             onChange={(e) => setManagerId(e.target.value)}
             value={managerId}
           >
             <option value="">Select Manager</option>
-            {managers?.length > 0  ? managers?.map((mgr) => (
-              <option key={mgr._id} value={mgr._id}>
-                {mgr.firstname + " " + mgr.lastname}
-              </option>
-            )) : <option disabled>No Managers Found</option>}
+            {managers?.length > 0 ? (
+              managers?.map((mgr) => (
+                <option key={mgr._id} value={mgr._id}>
+                  {mgr.firstname + " " + mgr.lastname}
+                </option>
+              ))
+            ) : (
+              <option disabled>No Managers Found</option>
+            )}
           </select>
         )}
       </div>
@@ -105,7 +129,7 @@ const MessagesEmpVsMan = () => {
                       : "bg-white text-gray-800 rounded-bl-none"
                   }`}
                 >
-                  {msg.text}
+                  {msg.content}
                 </div>
               </div>
             ))}
@@ -124,7 +148,7 @@ const MessagesEmpVsMan = () => {
             <button
               onClick={handleSend}
               className={`bg-indigo-600 p-3 rounded-full text-white hover:bg-indigo-700 ${
-                !managerId && "opacity-50 cursor-not-allowed"
+                !managerId || loggedEmployee.position === "manager" && "opacity-50 cursor-not-allowed"
               }`}
             >
               <SendHorizonal size={20} />

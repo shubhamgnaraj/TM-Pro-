@@ -10,5 +10,7 @@ taskRouter.get("/employee/dashboard/:employeeId", taskController.getEmployeeTask
 
 taskRouter.get("/manager/dashboard", taskController.getAllUsers)
 
+taskRouter.get("/messages/:chatId", taskController.getSpecificAllMsg)
+
 
 module.exports = taskRouter;

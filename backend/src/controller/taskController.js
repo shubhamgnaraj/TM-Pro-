@@ -40,11 +40,38 @@ exports.getEmployeeTask = async (req, res) => {
 
     res.json({ tasks: employee ? employee : [] });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "failed to fetch employees tasks=> getEmployeeTask: ",
-        error,
-      });
+    res.status(500).json({
+      message: "failed to fetch employees tasks=> getEmployeeTask: ",
+      error,
+    });
   }
 };
+
+exports.getSpecificAllMsg = async (req, res, next) => {
+  try {
+    const { chatId } = req.params;
+
+    // Await for data
+    const employees = await Employee.find({
+      "messages.chatId": chatId,
+    });
+
+    let allMessages = [];
+
+    employees.forEach((employee) => {
+      // fix here too: employee.messages.filter
+      const msgs = employee.messages.filter((msg) => msg.chatId === chatId);
+      allMessages = allMessages.concat(msgs);
+    });
+
+    // Sort by timestamp
+    allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    // Send response
+    res.json(allMessages);
+  } catch (error) {
+    console.log("Something went wrong about Messages: ", error);
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+};
+
