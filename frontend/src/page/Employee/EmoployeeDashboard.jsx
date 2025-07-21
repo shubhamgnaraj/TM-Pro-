@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { BiMessageRounded } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoggedInEmployee } from "../../service/service";
-import { BASE_URL } from "../../config";
 import { jwtDecode } from "jwt-decode";
-import { Link } from "react-router";
+import MagicLoader from "../../components/MagicLoader";
+import Navbar from "../../components/Navbar";
 
 function EmployeeDashboard() {
   const [tasks, setTasks] = useState([]);
@@ -21,7 +20,6 @@ function EmployeeDashboard() {
     }
   }, [dispatch]);
 
-  if (!loggedEmployee) return <p>Loading employee data...</p>;
   const handleOnTaskAceepted = (taskId) => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
@@ -29,34 +27,16 @@ function EmployeeDashboard() {
       });
     });
   };
+  
+  if (!loggedEmployee) return <MagicLoader />;
+
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-blue-600 via-teal-400 to-green-400 relative overflow-x-hidden">
-      <div className=" w-full h-[35%] flex items-center justify-between px-8 py-4">
-        <div className="flex items-center gap-x-4 ">
-          <img
-            src={`${BASE_URL}/uploads/${loggedEmployee.photo}`}
-            alt="Employee"
-            className="w-16 h-16 rounded-full shadow-[0_0_15px_#00f5c6] ring-4 ring-[#00f5c6] hover:scale-105 transition duration-300 object-center"
-          />
-
-          <h1 className="text-sm mt-2 font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
-            <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
-              {loggedEmployee.firstname + " " + loggedEmployee.lastname}
-            </span>
-          </h1>
-        </div>
-
-        <Link
-          to={`/messages/${loggedEmployee?._id}`}
-          className="bg-blue-100 p-2 rounded-full"
-        >
-          <BiMessageRounded className="text-blue-500 text-2xl" />
-        </Link>
-      </div>
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
+      <Navbar loggedEmployee={loggedEmployee}/>
       <div className="flex flex-col items-center min-h-screen py-5 px-4">
         <h1 className="text-4xl font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
-          <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#839e9e] via-[#94839e] to-[#ac879a] bg-clip-text text-transparent">
             Accepted Tasks
           </span>
         </h1>

@@ -18,7 +18,7 @@ function ManagerDashboard() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-blue-500 via-teal-400 to-green-500 min-h-screen w-full relative">
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
 
       <div className="flex justify-around items-center min-h-[80vh] px-6 py-4 flex-wrap gap-6 mt-5">

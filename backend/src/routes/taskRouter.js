@@ -12,5 +12,6 @@ taskRouter.get("/manager/dashboard", taskController.getAllUsers)
 
 taskRouter.get("/messages/:chatId", taskController.getSpecificAllMsg)
 
+taskRouter.delete("/view-details/:employeeId/task/:taskId", taskController.deleteTaskFromEmployees)
 
 module.exports = taskRouter;

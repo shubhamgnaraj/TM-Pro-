@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import { SendHorizonal } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
@@ -6,28 +6,42 @@ import { fetchAllEmployees, fetchAllMessages, getLoggedInEmployee } from "../ser
 import socket from "../utils/socket";
 import { useParams } from "react-router";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import MagicLoader from "../components/MagicLoader";
 
 const MessagesEmpVsMan = () => {
   const [messages, setMessages] = useState([]);
   const [managerId, setManagerId] = useState("");
   const [input, setInput] = useState("");
+
   const { id: receiveIdFromURL } = useParams();
+  const dispatch = useDispatch();
 
   const { employeeInfo, loggedEmployee } = useSelector((state) => state.user);
-
-  const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const decode = jwtDecode(token);
-  const managers = employeeInfo?.filter((u) => u.position === "manager");
 
   const senderId = loggedEmployee?._id;
   const isEmployee = loggedEmployee?.position === "employee";
   const receiverId = isEmployee ? managerId : receiveIdFromURL;
 
-  const chatId = receiverId ? [senderId, receiverId].sort().join("_") : "";
+  const chatId = useMemo(() => {
+    return receiverId && senderId
+      ? [senderId, receiverId].sort().join("_")
+      : null;
+  }, [senderId, receiverId]);
+
+  const managers = employeeInfo?.filter((u) => u.position === "manager");
 
   useEffect(() => {
-    fetchAllMessages(chatId).then((data) => setMessages(data))
+    if (token) {
+      dispatch(getLoggedInEmployee(decode.id));
+      dispatch(fetchAllEmployees());
+    }
+  }, [dispatch, token, decode.id]);
+
+  useEffect(() => {
+    if (!chatId) return;
+    fetchAllMessages(chatId).then((data) => setMessages(data));
   }, [chatId]);
 
   useEffect(() => {
@@ -39,7 +53,6 @@ const MessagesEmpVsMan = () => {
       setMessages((prev) => [...prev, msg]);
     };
 
-    socket.off("receiveMessage")
     socket.on("receiveMessage", handleReceive);
 
     return () => {
@@ -48,7 +61,7 @@ const MessagesEmpVsMan = () => {
   }, [chatId]);
 
   const handleSend = () => {
-    if (input.trim() === "") return;
+    if (!input.trim() || !receiverId) return;
 
     socket.emit("sendMessage", {
       chatId,
@@ -59,28 +72,21 @@ const MessagesEmpVsMan = () => {
     setInput("");
   };
 
-  useEffect(() => {
-    if (token) {
-      dispatch(getLoggedInEmployee(decode.id));
-      dispatch(fetchAllEmployees());
-    }
-  }, []);
-  if (!loggedEmployee) return <p>Loading employee data...</p>;
-  console.log(messages)
+  if (!loggedEmployee || !employeeInfo) return <MagicLoader />;
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-blue-600 via-teal-400 to-green-400 relative overflow-x-hidden py-5 px-10">
       <div>
         {loggedEmployee?.position === "employee" && (
           <select
-            className="mb-4 "
             onChange={(e) => setManagerId(e.target.value)}
             value={managerId}
+            className="mb-4  outline-none placeholder:text-sm placeholder:opacity-75 rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-8 font-semibold transition capitalize"
           >
             <option value="">Select Manager</option>
             {managers?.length > 0 ? (
               managers?.map((mgr) => (
-                <option key={mgr._id} value={mgr._id}>
+                <option key={mgr._id} value={mgr._id} >
                   {mgr.firstname + " " + mgr.lastname}
                 </option>
               ))

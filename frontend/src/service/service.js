@@ -92,3 +92,16 @@ export const fetchAllMessages = async (chatId) => {
     console.log("Error fetching messages: ", error)
   }
 }
+
+export const deleteTask = async (employeeId, taskId) => {
+  try {
+    const response = await authFetch(`${BASE_URL}/view-details/${employeeId}/task/${taskId}`, {
+      method: 'DELETE'
+    })
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.log('task was not deleted: ', error)
+  }
+}

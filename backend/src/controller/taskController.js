@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Employee = require("../model/employee");
 
 exports.addTask = async (req, res, next) => {
@@ -75,3 +76,21 @@ exports.getSpecificAllMsg = async (req, res, next) => {
   }
 };
 
+exports.deleteTaskFromEmployees = async (req, res, next) => {
+  try {
+    const {employeeId, taskId} = req.params;
+
+    const result = await Employee.updateOne(
+      {_id: employeeId},
+      {$pull: {tasks: {_id: new mongoose.Types.ObjectId(taskId)}}}
+    )
+
+    if(result.matchedCount === 0) {
+      return res.status(404).json({message: "Task not found or Already Deleted"})
+    }
+    
+    res.status(200).json({message: 'Task Deleted Succefuly'})
+  } catch (error) {
+   res.status(500).json({ error: "Internal server error." });
+  }
+}

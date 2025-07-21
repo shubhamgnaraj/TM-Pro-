@@ -39,7 +39,7 @@ function SendTaskEmployee() {
     setDate("");
     setEmployeeId("");
 
-    navigate("/employee/dashboard");
+    navigate("/manager/dashboard");
   };
 
   useEffect(() => {

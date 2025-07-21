@@ -9,17 +9,14 @@ import Login from "./page/auth/Login";
 import PrivacyComp from "./components/PrivacyComp";
 import ViewDetail from "./page/ViewDetail";
 import MessagesEmpVsMan from "./page/MessagesEmpVsMan";
-import { jwtDecode } from "jwt-decode";
+import MagicLoader from "./components/MagicLoader";
+import { AuthContext } from "./context/AuthContext";
+import { useContext } from "react";
 
 function App() {
-  const token = localStorage.getItem("token");
-  let decode = null;
-  
-  if(token) {
-    decode = jwtDecode(token)
-  } else {
-    decode = {position: ""}
-  }
+  const {user} = useContext(AuthContext)
+
+  if(!user) return <MagicLoader />
 
   return (
     <div className="w-full h-screen overflow-hidden">
@@ -27,7 +24,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/employee/login" element={<Login />} />
 
-        {decode.position === "employee" && (
+        {user?.position === "employee" && (
           <Route
             path="/employee/dashboard"
             element={
@@ -38,16 +35,16 @@ function App() {
           />
         )}
 
-        {decode.position === "manager" && (
+        {user?.position === "manager" && (
           <>
-              <Route
-                path="/manager/dashboard"
-                element={
-                  <PrivacyComp>
-                    <ManagerDashboard />
-                  </PrivacyComp>
-                }
-              />
+            <Route
+              path="/manager/dashboard"
+              element={
+                <PrivacyComp>
+                  <ManagerDashboard />
+                </PrivacyComp>
+              }
+            />
             <Route
               path="/view-details/:id"
               element={
