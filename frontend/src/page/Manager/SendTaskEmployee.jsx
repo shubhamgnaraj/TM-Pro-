@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { addItemsToServer, fetchAllEmployees } from "../../service/service";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Navbar from "../../components/Navbar";
+import { AuthContext } from "../../context/AuthContext";
 
 function SendTaskEmployee() {
   const [title, setTitle] = useState("");
@@ -11,6 +12,8 @@ function SendTaskEmployee() {
   const [priority, setPriority] = useState("low");
   const [date, setDate] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const { mode, empId, taskId } = useParams();
+  const [task, setTask] = useState({});
 
   const { employeeInfo } = useSelector((state) => state.user);
   const employees = employeeInfo?.filter((em) => em.position === "employee");
@@ -21,7 +24,6 @@ function SendTaskEmployee() {
   const handleOnAddTaskForm = (e) => {
     e.preventDefault();
 
-    console.log(employeeId);
     const taskData = {
       employeeId,
       title,
@@ -41,6 +43,26 @@ function SendTaskEmployee() {
 
     navigate("/manager/dashboard");
   };
+
+  useEffect(() => {
+    if (mode === "edit") {
+      const employeeTask = employees?.find((emp) => emp._id === empId);
+
+      if (employeeTask) {
+        const particularTask = employeeTask.tasks.find(
+          (task) => task._id === taskId
+        );
+        if (particularTask) {
+          setTitle(particularTask.title || "");
+          setDescription(particularTask.description || "");
+          setTags(particularTask.tags || "#work");
+          setPriority(particularTask.priority || "low");
+          setDate(particularTask.date?.slice(0, 10) || ""); // trimming date to yyyy-mm-dd
+          setEmployeeId(empId); // lock it to empId passed in URL
+        }
+      }
+    }
+  }, [employees]);
 
   useEffect(() => {
     dispatch(fetchAllEmployees());
@@ -84,15 +106,21 @@ function SendTaskEmployee() {
               </svg>
             </div>
             <h2 className="text-3xl font-extrabold text-white drop-shadow-lg text-center">
-              Assign a New Task
+              {mode === "edit" ? "Update Task" : "Assign a New Task"}
             </h2>
             <p className="text-white/80 text-base font-medium text-center">
-              Fill in the details below to assign a task to your employee.
+              {mode === "edit"
+                ? "Update the details below to modify the assigned task for your employee"
+                : "Fill in the details below to assign a task to your employee."}
             </p>
           </div>
           <form
             className="space-y-1"
-            action="/manager/send-task-employee"
+            action={
+              mode === "edit"
+                ? `/manager/sendTask/${mode}/${empId}/${taskId}`
+                : `/manager/send-task-employee`
+            }
             method="post"
             onSubmit={handleOnAddTaskForm}
           >
@@ -212,7 +240,8 @@ function SendTaskEmployee() {
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
                 required
-                className="outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-2"
+                disabled={mode === "edit"}
+                className={`outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-2`}
               >
                 <option value="">Select employee...</option>
                 {employees?.map((emp) => (
@@ -232,7 +261,7 @@ function SendTaskEmployee() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 via-teal-400 to-green-500 text-white py-2 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-700 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition mt-4"
               >
-                Assign Task
+                {mode === "edit" ? "Update Task" : "Assign Task"}
               </button>
             </div>
           </form>

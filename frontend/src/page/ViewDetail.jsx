@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { deleteTask, fetchAllEmployees } from "../service/service";
 import Navbar from "../components/Navbar";
 import MagicLoader from "../components/MagicLoader";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router";
 
 function ViewDetail() {
   const [employee, setEmployee] = useState([]);
   const { id: employeeId } = useParams();
 
   const { employeeInfo } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAllEmployees());
@@ -34,6 +39,9 @@ function ViewDetail() {
     });
   };
 
+  const handleOnEditTask = (employeeId, taskId => {
+
+  })
   if (employee.length === 0) return <MagicLoader />;
 
   return (
@@ -86,9 +94,9 @@ function ViewDetail() {
                     </div>
 
                     <div className="mt-6 flex justify-end gap-3">
-                      <button className="text-sm px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg font-medium transition-all">
+                      <Link to={`/manager/send-task-employee/edit/${employee._id}/${task._id}`} className="text-sm px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg font-medium transition-all">
                         Edit
-                      </button>
+                      </Link>
                       <button
                         className="text-sm px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg font-medium transition-all"
                         onClick={() =>

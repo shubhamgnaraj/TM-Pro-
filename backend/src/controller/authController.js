@@ -43,18 +43,15 @@ exports.registerUser = [
     }),
 
   async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-      }
 
       const { firstname, lastname, email, password, position } = req.body;
-      console.log(req.body)
+      
       const photo = req.file?.filename;
-
-      console.log("req.file: ", req.file);
-      console.log("req.body: ", req.body);
 
       const existingEmployee = await Employee.findOne({ email });
       if (existingEmployee) {
@@ -85,19 +82,23 @@ exports.registerUser = [
 ];
 
 exports.loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
-  try {
-    const employee = await Employee.findOne({ email });
 
-    if (!employee) {
-      return res.status(404).json({ message: "Employee not found" });
-    }
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()) {
+    return res.status(400).json({errors: errors.array()})
+  }
+  try {
+
+    const { email, password } = req.body;
+
+    const employee = await Employee.findOne({ email });
+    if (!employee) res.status(404).json({ message: "Employee not found" });
 
     const isMatch = await bcrypt.compare(password, employee.password);
-    if (!isMatch) return res.status(404).json({ message: "Invalid Password" });
-
-    const jwtSecret = process.env.JWT_SECRET;
-    const token = jwt.sign({ id: employee._id, position: employee.position}, jwtSecret, {
+    if (!isMatch) res.status(404).json({ message: "Invalid Password" });
+    
+    const token = jwt.sign({ id: employee._id, position: employee.position}, process.env.JWT_SECRET, {
       expiresIn: "3h",
     });
 
@@ -107,8 +108,8 @@ exports.loginUser = async (req, res, next) => {
       employee,
       tasks: employee.tasks,
     });
+
   } catch (error) {
-    console.error("Login error: ", error);
     res.status(500).json({ message: "Server error during login" });
   }
 };

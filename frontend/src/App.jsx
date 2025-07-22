@@ -16,8 +16,6 @@ import { useContext } from "react";
 function App() {
   const {user} = useContext(AuthContext)
 
-  if(!user) return <MagicLoader />
-
   return (
     <div className="w-full h-screen overflow-hidden">
       <Routes>
@@ -56,6 +54,15 @@ function App() {
             <Route path="/manager/add-user" element={<SignUp />} />
             <Route
               path="/manager/send-task-employee"
+              element={
+                <PrivacyComp>
+                  <SendTaskEmployee />
+                </PrivacyComp>
+              }
+            />
+            <Route path="/manager/add-user" element={<SignUp />} />
+            <Route
+              path="/manager/send-task-employee/:mode/:empId/:taskId"
               element={
                 <PrivacyComp>
                   <SendTaskEmployee />

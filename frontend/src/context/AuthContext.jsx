@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isEdit, setIsEdit] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,8 +22,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
     navigate("/employees/login");
   };
+
   return (
-    <AuthContext.Provider value={{ user, logOut }}>
+    <AuthContext.Provider value={{ user, logOut, isEdit, setIsEdit }}>
       {children}
     </AuthContext.Provider>
   );
