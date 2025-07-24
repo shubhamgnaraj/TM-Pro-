@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUserFromServer } from "../../service/authService";
 import Navbar from "../../components/Navbar";
+import InputField from "../../components/InputField";
+import HeadingComp from "../../components/HeadingComp";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -29,7 +31,6 @@ function SignUp() {
       position,
     };
 
-    console.log(employeeInfo)
     dispatch(registerUserFromServer(employeeInfo))
       .unwrap()
       .then((data) => {
@@ -40,7 +41,7 @@ function SignUp() {
         setEmail("");
         setPassword("");
         setConfirmPassword("");
-        setPosition("")
+        setPosition("");
       })
       .catch((error) => {
         console.log("registration failed: ", error);
@@ -50,10 +51,10 @@ function SignUp() {
   return (
     <div className="w-full h-screen">
       <Navbar />
-
-      <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
+      {/*  p-8 */}
+      <div className="w-full h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] flex justify-center relative overflow-hidden py-5 ">
         {/* Decorative Circles */}
-        <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-blue-400 opacity-30 rounded-full blur-2xl z-0"></div>
+        <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#a574c1] opacity-30 rounded-full blur-2xl z-0"></div>
         <div className="absolute bottom-[-120px] right-[-120px] w-[350px] h-[350px] bg-green-300 opacity-30 rounded-full blur-2xl z-0"></div>
         <div className="absolute top-1/2 left-1/2 w-[200px] h-[200px] bg-teal-300 opacity-20 rounded-full blur-2xl z-0 transform -translate-x-1/2 -translate-y-1/2"></div>
 
@@ -74,6 +75,8 @@ function SignUp() {
                 />
               </svg>
             </div>
+            
+            <HeadingComp headingName={'Add-user'}/>
           </div>
           <form
             className="space-y-3"
@@ -82,147 +85,97 @@ function SignUp() {
             encType="multipart/form-data"
             onSubmit={handleOnemployeeInfoSubmit}
           >
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="firstname"
-              >
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstname"
-                name="firstname"
-                value={firstName}
-                required
-                onChange={(e) => setFirstName(e.target.value)}
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-                placeholder="Enter your first name"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="lastname"
-              >
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                name="lastname"
-                value={lastName}
-                required
-                onChange={(e) => setLastName(e.target.value)}
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-                placeholder="Enter your last name"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="lastname"
-              >
-                Add Photo
-              </label>
-              <input
-                type="file"
-                id="photo"
-                name="photo"
-                required
-                onChange={(e) => setEmployeePhoto(e.target.files[0])}
-                accept="image/*"
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                required
-                onChange={(e) => setEmail(e.target.value)}
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-                placeholder="Enter your password"
-              />
-            </div>
-            <div>
-              <label
-                className="block text-sm font-semibold text-white"
-                htmlFor="confirmpassword"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmpassword"
-                name="confirmpassword"
-                value={confirmPassword}
-                required
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="placeholder:text-[13px] outline-none block w-full rounded-lg bg-white/60 text-gray-800 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-sm py-2 px-4 font-semibold placeholder:text-gray-500 placeholder:opacity-70 transition"
-                placeholder="Confirm your password"
-              />
-            </div>
+            {/* firstName */}
+            <InputField
+              label={"firstName"}
+              type={"text"}
+              id="Firstname"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Enter your first name"
+            />
+            {/* lastName */}
+            <InputField
+              label={"lastName"}
+              type={"text"}
+              id="Lastname"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder={"Enter your last name"}
+            />
 
-          <div>
-             <label
-                className="block text-sm font-semibold text-white"
+            {/* photo */}
+            <InputField
+              label={"Add Photo"}
+              type="file"
+              id="photo"
+              onChange={(e) => setEmployeePhoto(e.target.files[0])}
+              accept="image/*"
+            />
+
+            {/* emil */}
+            <InputField
+              label={"Email"}
+              type="email"
+              id="email"
+              value={email}
+              placeholder="Enter your email "
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            {/* password */}
+            <InputField
+              label={"Password"}
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
+
+            {/* confirm password */}
+            <InputField
+              label={"Confirm Password"}
+              type="password"
+              id="confirmpassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+            />
+
+            <div>
+              <label
+                className="block text-[13px] font-semibold text-black/50"
                 htmlFor="confirmpassword"
               >
                 Postion
               </label>
               <select
-              name="position"
-              id="position"
-              required
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              className=" outline-none placeholder:text-sm placeholder:opacity-75 rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-8 font-semibold transition"
-            >
-              <option value="employee">Employee</option>
-              <option value="manager">Manager</option>
-            </select>
-          </div>
+                name="position"
+                id="position"
+                required
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                className=" outline-none placeholder:text-sm placeholder:opacity-75 rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-8 font-semibold transition "
+              >
+                <option value="employee">Employee</option>
+                <option value="manager">Manager</option>
+              </select>
+            </div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 via-teal-400 to-green-400 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+              className="w-full bg-gradient-to-r from-blue-500 via-teal-500 to-green-400 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
             >
               Sign Up
             </button>
           </form>
           <div className=" text-center">
-            <span className="text-white/80 text-sm">
+            <span className="text-black/40 text-sm">
               Already have an account?
             </span>{" "}
             <Link
-              to="/auth/login"
-              className="text-blue-200 underline font-semibold hover:text-white transition"
+              to="/employee/login"
+              className="text-blue-400 underline hover:text-white transition"
             >
               Login here
             </Link>

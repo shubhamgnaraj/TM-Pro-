@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const taskSchema = require("./tasks");
 const bcrypt = require("bcryptjs");
 const messageSchema = require("./message");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const employeeSchema = new mongoose.Schema({
   firstname: {
@@ -29,8 +29,20 @@ const employeeSchema = new mongoose.Schema({
     required: true,
     enum: ["employee", "manager"],
   },
+  totalTask: {
+    type: Number,
+    default: 0,
+  },
+  pendingTask: {
+    type: Number,
+    default: 0,
+  },
+  acceptedTask: {
+    type: Number,
+    default: 0,
+  },
   tasks: [taskSchema],
-  messages: [messageSchema]
+  messages: [messageSchema],
 });
 
 employeeSchema.pre("save", async function () {

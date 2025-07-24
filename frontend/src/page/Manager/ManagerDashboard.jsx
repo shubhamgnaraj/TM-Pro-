@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 // import { getUsersfromServer } from "../../service/service";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllEmployees } from "../../service/service";
+import HeadingComp from "../../components/HeadingComp";
 
 function ManagerDashboard() {
   const [users, setUsers] = useState(null);
@@ -21,7 +22,8 @@ function ManagerDashboard() {
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
 
-      <div className="flex justify-around items-center min-h-[80vh] px-6 py-4 flex-wrap gap-6 mt-5">
+      <HeadingComp headingName={"Manager-Dashboard"}/>
+      <div className="flex px-6 py-4 flex-wrap gap-6 mt-5">
         {employeeInfo && employeeInfo.length > 0 ? (
           employeeInfo.map((employee) => {
             if (employee.position === "employee") {
@@ -48,19 +50,19 @@ function ManagerDashboard() {
                     <div className="flex flex-col items-center">
                       <span className="text-gray-500 text-xs">Total</span>
                       <span className="font-bold text-green-500 text-2xl p-2">
-                        0
+                        {employee.totalTask}
                       </span>
                     </div>
                     <div className="flex flex-col items-center">
                       <span className="text-gray-500 text-xs">Accepted</span>
                       <span className="font-bold text-yellow-500 text-2xl p-2">
-                        0
+                        {employee.acceptedTask}
                       </span>
                     </div>
                     <div className="flex flex-col items-center">
                       <span className="text-gray-500 text-xs">Pending</span>
                       <span className="font-bold text-red-500 text-2xl p-2">
-                        0
+                        {employee.pendingTask}
                       </span>
                     </div>
                   </div>

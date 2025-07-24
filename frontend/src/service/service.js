@@ -105,3 +105,37 @@ export const deleteTask = async (employeeId, taskId) => {
     console.log('task was not deleted: ', error)
   }
 }
+
+export const updateTask = async (taskData, mode, employeeId, taskId) => {
+  try {
+    const response = await authFetch(`${BASE_URL}/manager/sendTask/${mode}/${employeeId}/${taskId}`, {
+      method: "PUT",
+      body: JSON.stringify(taskData)
+    });
+    const data = await response.json();
+    
+    return data;
+  } catch (error) {
+    console.log("Something went wrong about updated Task: ", error)
+  }
+}
+
+export const acceptedAndPendingTask = async (employeeId) => {
+  try {
+    const response = await authFetch(`${BASE_URL}/employee/tasks/${employeeId}`, {
+      method: "PUT",
+    });
+
+    if (!response.ok) {
+      console.error(`Error ${response.status}: ${response.statusText}`);
+      throw new Error("Failed to update accepted and pending task.");
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Something went wrong with accepted and pending task:", error.message);
+    throw error;
+  }
+};

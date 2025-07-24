@@ -1,9 +1,14 @@
-import { useState, useEffect, useContext } from "react";
-import { addItemsToServer, fetchAllEmployees } from "../../service/service";
+import { useState, useEffect } from "react";
+import {
+  addItemsToServer,
+  fetchAllEmployees,
+  updateTask,
+} from "../../service/service";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import Navbar from "../../components/Navbar";
-import { AuthContext } from "../../context/AuthContext";
+import InputField from "../../components/InputField";
+import HeadingComp from "../../components/HeadingComp";
 
 function SendTaskEmployee() {
   const [title, setTitle] = useState("");
@@ -13,7 +18,7 @@ function SendTaskEmployee() {
   const [date, setDate] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const { mode, empId, taskId } = useParams();
-  const [task, setTask] = useState({});
+  const [loaded, setLoaded] = useState(false);
 
   const { employeeInfo } = useSelector((state) => state.user);
   const employees = employeeInfo?.filter((em) => em.position === "employee");
@@ -33,7 +38,13 @@ function SendTaskEmployee() {
       date,
     };
 
-    dispatch(addItemsToServer(taskData));
+    if (mode === "edit") {
+      updateTask(taskData, mode, empId, taskId).then((data) => {
+        console.log(data);
+      });
+      navigate(`/view-details/${empId}`);
+    } else dispatch(addItemsToServer(taskData));
+
     setTitle("");
     setDescription("");
     setTags("#work");
@@ -45,9 +56,8 @@ function SendTaskEmployee() {
   };
 
   useEffect(() => {
-    if (mode === "edit") {
-      const employeeTask = employees?.find((emp) => emp._id === empId);
-
+    if (mode === "edit" && employees?.length > 0 && !loaded) {
+      const employeeTask = employees.find((emp) => emp._id === empId);
       if (employeeTask) {
         const particularTask = employeeTask.tasks.find(
           (task) => task._id === taskId
@@ -57,12 +67,13 @@ function SendTaskEmployee() {
           setDescription(particularTask.description || "");
           setTags(particularTask.tags || "#work");
           setPriority(particularTask.priority || "low");
-          setDate(particularTask.date?.slice(0, 10) || ""); // trimming date to yyyy-mm-dd
-          setEmployeeId(empId); // lock it to empId passed in URL
+          setDate(particularTask.date?.slice(0, 10) || "");
+          setEmployeeId(empId);
+          setLoaded(true);
         }
       }
     }
-  }, [employees]);
+  }, [employees, mode, empId, taskId, loaded]);
 
   useEffect(() => {
     dispatch(fetchAllEmployees());
@@ -72,7 +83,7 @@ function SendTaskEmployee() {
     <div className="w-full h-screen">
       <Navbar />
 
-      <div className="w-full h-screen bg-gradient-to-br from-blue-700 via-teal-500 to-green-400 flex  justify-center relative overflow-hidden py-5">
+      <div className="w-full h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] flex justify-center relative overflow-hidden py-5 ">
         {/* Decorative Circles */}
         <div className="relative z-10 w-full max-w-lg mx-auto bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl px-10 py-1 border border-white/20 mb-2">
           <div className="flex flex-col items-center mb-5">
@@ -105,10 +116,9 @@ function SendTaskEmployee() {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-extrabold text-white drop-shadow-lg text-center">
-              {mode === "edit" ? "Update Task" : "Assign a New Task"}
-            </h2>
-            <p className="text-white/80 text-base font-medium text-center">
+            <HeadingComp headingName={mode === "edit" ? "Update Task" : "Assign a New Task"}/>
+            
+            <p className="text-gray-400 text-base font-medium text-center">
               {mode === "edit"
                 ? "Update the details below to modify the assigned task for your employee"
                 : "Fill in the details below to assign a task to your employee."}
@@ -125,29 +135,21 @@ function SendTaskEmployee() {
             onSubmit={handleOnAddTaskForm}
           >
             {/* Title */}
-            <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-semibold text-white mb-1"
-              >
-                Task Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                className=" outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-800 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition"
-                placeholder="E.g., Complete project report"
-              />
-            </div>
+
+            <InputField
+              label={"Task title"}
+              type={"text"}
+              id={"title"}
+              value={title}
+              onChange={() => setTitle(e.target.value)}
+              placeholder={"E.g., Complete project report"}
+            />
 
             {/* Description */}
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-semibold text-white mb-1 mt-2"
+                className="block text-[13px] font-semibold text-black/50 mb-1 "
               >
                 Description
               </label>
@@ -157,17 +159,17 @@ function SendTaskEmployee() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="outline-none placeholder:text-sm placeholder:opacity-75 block w-full rounded-lg bg-white/70 text-gray-800 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition"
+                className="outline-none placeholder:text-sm placeholder:opacity-75 block w-full rounded-lg bg-white/70 text-gray-800 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-4"
                 placeholder="Provide a detailed description of the task..."
               ></textarea>
             </div>
 
-            <div className="w-full flex justify-between items-center  gap-4">
+            <div className="w-full flex justify-between items-center  gap-4 ">
               {/* Tags */}
               <div>
                 <label
                   htmlFor="tags"
-                  className="block text-sm font-semibold text-white mb-1 mt-2 "
+                  className="block text-[13px] font-semibold text-black/50 mb-1"
                 >
                   Tags
                 </label>
@@ -190,7 +192,7 @@ function SendTaskEmployee() {
               <div>
                 <label
                   htmlFor="priority"
-                  className="block text-sm font-semibold text-white mb-1 mt-2"
+                  className="block text-[13px] font-semibold text-black/50 mb-1"
                 >
                   Priority
                 </label>
@@ -200,7 +202,7 @@ function SendTaskEmployee() {
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
                   required
-                  className="outline-none placeholder:text-sm placeholder:opacity-75 rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-8 font-semibold transition"
+                  className="outline-none placeholder:text-sm placeholder:opacity-75 rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-8 font-semibold transition "
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -213,7 +215,7 @@ function SendTaskEmployee() {
             <div>
               <label
                 htmlFor="dueDate"
-                className="block text-sm font-semibold text-white mb-1 mt-2"
+                className="block text-[13px] font-semibold text-black/50 mb-1 "
               >
                 Due Date
               </label>
@@ -224,14 +226,14 @@ function SendTaskEmployee() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
-                className="outline-none placeholder:text-sm placeholder:opacity-75 block w-full rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition"
+                className="outline-none placeholder:text-sm placeholder:opacity-75 block w-full rounded-lg bg-white/70 text-gray-500 placeholder-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition "
               />
             </div>
 
             <div>
               <label
                 htmlFor="employeeId"
-                className="block text-sm font-semibold text-white mt-2 mb-1"
+                className="block text-[13px] font-semibold text-black/50 mb-1 mt-4"
               >
                 Employee
               </label>
@@ -241,7 +243,7 @@ function SendTaskEmployee() {
                 onChange={(e) => setEmployeeId(e.target.value)}
                 required
                 disabled={mode === "edit"}
-                className={`outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-2`}
+                className={`outline-none placeholder:text-sm placeholder:opacity-75 mt-1 block w-full rounded-lg bg-white/70 text-gray-500 border-none shadow-sm focus:ring-2 focus:ring-blue-400 sm:text-base py-2 px-4 font-semibold transition mb-8`}
               >
                 <option value="">Select employee...</option>
                 {employees?.map((emp) => (
@@ -259,7 +261,7 @@ function SendTaskEmployee() {
             <div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 via-teal-400 to-green-500 text-white py-2 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-700 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition mt-4"
+                className="w-full bg-gradient-to-r from-blue-600 via-teal-400 to-green-500 text-white py-2 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-700 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition "
               >
                 {mode === "edit" ? "Update Task" : "Assign Task"}
               </button>

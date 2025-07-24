@@ -1,9 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const session = require("express-session");
 const helmet = require("helmet");
-const multer = require("multer")
 const path = require("path")
+const morgan = require("morgan")
 
 // External modules
 const { errorController } = require("./src/controller/error");
@@ -15,6 +14,7 @@ const verifyToken = require("./src/middleware/verifyToken")
 const app = express();
 
 // Middleware
+
 app.use(cors());
 app.use(helmet({
   contentSecurityPolicy: {
@@ -26,6 +26,7 @@ app.use(helmet({
     },
   },
 }));;
+app.use(morgan('dev'))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,6 +35,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads'), {
      req.set('Cross-Origin-Resource-Policy', 'cross-origin');
   }
 }));
+
 
 app.use(authRouter);
 app.use(verifyToken, taskRouter);

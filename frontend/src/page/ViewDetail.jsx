@@ -4,9 +4,8 @@ import { useNavigate, useParams } from "react-router";
 import { deleteTask, fetchAllEmployees } from "../service/service";
 import Navbar from "../components/Navbar";
 import MagicLoader from "../components/MagicLoader";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router";
+import HeadingComp from "../components/HeadingComp";
 
 function ViewDetail() {
   const [employee, setEmployee] = useState([]);
@@ -39,27 +38,26 @@ function ViewDetail() {
     });
   };
 
-  const handleOnEditTask = (employeeId, taskId => {
-
-  })
   if (employee.length === 0) return <MagicLoader />;
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
+
+      <HeadingComp headingName={"Employee-Tasks"}/>
       <div className="my-12">
         <h1 className="text-3xl text-center font-bold text-gray-700 capitalize mb-6 tracking-wide">
           {employee.firstname + " " + employee.lastname}
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="">
           {employee.tasks.length > 0 ? (
-            <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {employee.tasks.map((task) => {
                 return (
                   <div
                     key={task._id}
-                    className="bg-white/60 backdrop-blur-xl border border-indigo-100 shadow-2xl rounded-3xl p-6 flex flex-col justify-between hover:shadow-indigo-300 transition-shadow duration-300"
+                    className="bg-[#e2ecea] backdrop-blur-xl border border-indigo-100 shadow-2xl rounded-3xl p-6 flex flex-col justify-between hover:shadow-indigo-300 transition-shadow duration-300"
                   >
                     <div>
                       <div className="flex justify-between items-start mb-4">
@@ -79,13 +77,13 @@ function ViewDetail() {
                         </span>
                       </div>
 
-                      <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                      <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                         {task.description}
                       </p>
 
                       <div className="flex justify-between text-xs text-gray-600">
                         <span>
-                          <span className="font-medium">Tags:</span> {task.tags}
+                          <span className="font-medium">Tags:</span> <span className="text-blue-600">{task.tags}</span>
                         </span>
                         <span>
                           <span className="font-medium">Due:</span> {task.date}
