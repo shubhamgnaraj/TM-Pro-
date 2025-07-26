@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { acceptedAndPendingTask, getLoggedInEmployee } from "../../service/service";
+import {
+  acceptedAndPendingTask,
+  getLoggedInEmployee,
+} from "../../service/service";
 import { jwtDecode } from "jwt-decode";
 import MagicLoader from "../../components/MagicLoader";
 import Navbar from "../../components/Navbar";
 import HeadingComp from "../../components/HeadingComp";
 
 function EmployeeDashboard() {
-  const [tasks, setTasks] = useState([]);
   const { isLoading, loggedEmployee } = useSelector((state) => state.user);
 
   const token = localStorage.getItem("token");
@@ -22,8 +24,7 @@ function EmployeeDashboard() {
   }, [dispatch]);
 
   const handleOnTaskAceepted = (empId) => {
-    acceptedAndPendingTask(empId).then((data) => {
-    })
+    acceptedAndPendingTask(empId).then((data) => {});
   };
 
   if (!loggedEmployee) return <MagicLoader />;
@@ -32,8 +33,7 @@ function EmployeeDashboard() {
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar loggedEmployee={loggedEmployee} />
       <div className="flex flex-col items-center min-h-screen py-5 px-4">
-        
-        <HeadingComp headingName={"Employees-dashboard"}/>
+        <HeadingComp headingName={"Employees-dashboard"} />
         {isLoading || !loggedEmployee ? (
           <div className="flex justify-center items-center min-h-[40vh]">
             <div className="w-16 h-16 border-8 border-t-8 border-t-teal-400 border-blue-500 rounded-full animate-spin shadow-xl"></div>
@@ -55,9 +55,9 @@ function EmployeeDashboard() {
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-xl font-semibold text-indigo-900 capitalize">
-                          {task.title}
-                        </h2>
+                      <h2 className="text-xl font-semibold text-indigo-900 capitalize">
+                        {task.title}
+                      </h2>
                       <span
                         className={`text-xs px-2 py-1 rounded font-medium capitalize ${
                           task.priority === "high"
@@ -73,37 +73,30 @@ function EmployeeDashboard() {
                     <p className="text-sm text-gray-600 mb-4">
                       {task.description}
                     </p>
-                    
+
                     <div className="flex justify-between text-xs text-gray-600">
-                        <span>
-                          <span className="font-medium">Tags:</span> <span className="text-blue-600">{task.tags}</span>
-                        </span>
-                        <span>
-                          <span className="font-medium">Due:</span> {task.date}
-                        </span>
-                      </div>
+                      <span>
+                        <span className="font-medium">Tags:</span>{" "}
+                        <span className="text-blue-600">{task.tags}</span>
+                      </span>
+                      <span>
+                        <span className="font-medium">Due:</span> {task.date}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
-                      <button
-                        onClick={() =>
-                          handleOnTaskAceepted(loggedEmployee?._id)
-                        }
-                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition"
-                        title="Edit Task"
-                      >
-                        Accept Task
-                      </button>
+                    <button
+                      onClick={() => handleOnTaskAceepted(loggedEmployee?._id)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition"
+                    >
+                      Accept Task
+                    </button>
                   </div>
                 </div>
               ))
             )}
           </div>
         )}
-      </div>
-      <div className="absolute bottom-4 right-4 text-white/80 text-xs">
-        <span className="bg-black/30 px-3 py-1 rounded-full shadow">
-          Employee Dashboard
-        </span>
       </div>
     </div>
   );

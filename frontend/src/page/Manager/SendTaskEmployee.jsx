@@ -9,6 +9,8 @@ import { useNavigate, useParams } from "react-router";
 import Navbar from "../../components/Navbar";
 import InputField from "../../components/InputField";
 import HeadingComp from "../../components/HeadingComp";
+import ButtonField from "../../components/ButtonField";
+import BackgroundPage from "../../components/BackgroundPage";
 
 function SendTaskEmployee() {
   const [title, setTitle] = useState("");
@@ -83,7 +85,7 @@ function SendTaskEmployee() {
     <div className="w-full h-screen">
       <Navbar />
 
-      <div className="w-full h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] flex justify-center relative overflow-hidden py-5 ">
+      <BackgroundPage>
         {/* Decorative Circles */}
         <div className="relative z-10 w-full max-w-lg mx-auto bg-white/30 backdrop-blur-2xl rounded-3xl shadow-2xl px-10 py-1 border border-white/20 mb-2">
           <div className="flex flex-col items-center mb-5">
@@ -116,8 +118,12 @@ function SendTaskEmployee() {
                 />
               </svg>
             </div>
-            <HeadingComp headingName={mode === "edit" ? "Update Task" : "Assign a New Task"}/>
-            
+            <HeadingComp
+              headingName={
+                mode === "edit" ? "Update Task" : "Assign a New Task"
+              }
+            />
+
             <p className="text-gray-400 text-base font-medium text-center">
               {mode === "edit"
                 ? "Update the details below to modify the assigned task for your employee"
@@ -141,7 +147,7 @@ function SendTaskEmployee() {
               type={"text"}
               id={"title"}
               value={title}
-              onChange={() => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder={"E.g., Complete project report"}
             />
 
@@ -259,16 +265,13 @@ function SendTaskEmployee() {
             </div>
             {/* Submit Button */}
             <div>
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 via-teal-400 to-green-500 text-white py-2 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-700 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition "
-              >
-                {mode === "edit" ? "Update Task" : "Assign Task"}
-              </button>
+              <ButtonField
+                innerText={mode === "edit" ? "Update Task" : "Assign Task"}
+              />
             </div>
           </form>
         </div>
-      </div>
+      </BackgroundPage>
     </div>
   );
 }

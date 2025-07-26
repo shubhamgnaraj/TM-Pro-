@@ -5,6 +5,8 @@ import { registerUserFromServer } from "../../service/authService";
 import Navbar from "../../components/Navbar";
 import InputField from "../../components/InputField";
 import HeadingComp from "../../components/HeadingComp";
+import ButtonField from "../../components/ButtonField";
+import BackgroundPage from "../../components/BackgroundPage";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -52,12 +54,7 @@ function SignUp() {
     <div className="w-full h-screen">
       <Navbar />
       {/*  p-8 */}
-      <div className="w-full h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] flex justify-center relative overflow-hidden py-5 ">
-        {/* Decorative Circles */}
-        <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#a574c1] opacity-30 rounded-full blur-2xl z-0"></div>
-        <div className="absolute bottom-[-120px] right-[-120px] w-[350px] h-[350px] bg-green-300 opacity-30 rounded-full blur-2xl z-0"></div>
-        <div className="absolute top-1/2 left-1/2 w-[200px] h-[200px] bg-teal-300 opacity-20 rounded-full blur-2xl z-0 transform -translate-x-1/2 -translate-y-1/2"></div>
-
+      <BackgroundPage>
         <div className="relative z-10 w-full max-w-md mx-auto bg-white/30 backdrop-blur-lg rounded-2xl shadow-2xl py-2 px-8">
           <div className="flex flex-col items-center ">
             <div className="bg-gradient-to-tr from-blue-500 to-green-400 rounded-full p-3 shadow-lg mb-2">
@@ -75,8 +72,8 @@ function SignUp() {
                 />
               </svg>
             </div>
-            
-            <HeadingComp headingName={'Add-user'}/>
+
+            <HeadingComp headingName={"Add-user"} />
           </div>
           <form
             className="space-y-3"
@@ -162,12 +159,8 @@ function SignUp() {
                 <option value="manager">Manager</option>
               </select>
             </div>
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 via-teal-500 to-green-400 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
-            >
-              Sign Up
-            </button>
+
+            <ButtonField innerText={"Sign Up"} />
           </form>
           <div className=" text-center">
             <span className="text-black/40 text-sm">
@@ -181,7 +174,7 @@ function SignUp() {
             </Link>
           </div>
         </div>
-      </div>
+      </BackgroundPage>
     </div>
   );
 }

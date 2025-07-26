@@ -1,8 +1,12 @@
-import { useEffect, useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SendHorizonal } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
-import { fetchAllEmployees, fetchAllMessages, getLoggedInEmployee } from "../service/service";
+import {
+  fetchAllEmployees,
+  fetchAllMessages,
+  getLoggedInEmployee,
+} from "../service/service";
 import socket from "../utils/socket";
 import { useParams } from "react-router";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -20,10 +24,9 @@ const MessagesEmpVsMan = () => {
   const token = localStorage.getItem("token");
   const decode = jwtDecode(token);
 
-  const senderId = loggedEmployee?._id;
   const isEmployee = loggedEmployee?.position === "employee";
+  const senderId = loggedEmployee?._id;
   const receiverId = isEmployee ? managerId : receiveIdFromURL;
-
   const chatId = useMemo(() => {
     return receiverId && senderId
       ? [senderId, receiverId].sort().join("_")
@@ -86,7 +89,7 @@ const MessagesEmpVsMan = () => {
             <option value="">Select Manager</option>
             {managers?.length > 0 ? (
               managers?.map((mgr) => (
-                <option key={mgr._id} value={mgr._id} >
+                <option key={mgr._id} value={mgr._id}>
                   {mgr.firstname + " " + mgr.lastname}
                 </option>
               ))
@@ -146,8 +149,7 @@ const MessagesEmpVsMan = () => {
             <button
               onClick={handleSend}
               className={`bg-indigo-600 p-3 rounded-full text-white hover:bg-indigo-700 ${
-                !managerId || !isEmployee &&
-                  "opacity-50 cursor-not-allowed"
+                !managerId || (!isEmployee && "opacity-50 cursor-not-allowed")
               }`}
             >
               <SendHorizonal size={20} />

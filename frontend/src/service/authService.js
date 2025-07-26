@@ -12,11 +12,11 @@ export const registerUserFromServer = createAsyncThunk(
       formData.append("password", employeeInfo.password);
       formData.append("confirmPassword", employeeInfo.confirmPassword);
       formData.append("photo", employeeInfo.photo);
-      formData.append("position", employeeInfo.position)
+      formData.append("position", employeeInfo.position);
 
       const response = await fetch(`${BASE_URL}/manager/add-user`, {
         method: "POST",
-        body: formData
+        body: formData,
       });
 
       if (!response.ok) {
@@ -28,7 +28,8 @@ export const registerUserFromServer = createAsyncThunk(
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue({
-        message: "failed to register user", error,
+        message: "failed to register user",
+        error,
       });
     }
   }

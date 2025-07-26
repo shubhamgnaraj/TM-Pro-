@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addItemsToServer, getItemsFromServer, fetchAllEmployees, getLoggedInEmployee } from "../service/service";
+import {
+  addItemsToServer,
+  getItemsFromServer,
+  fetchAllEmployees,
+  getLoggedInEmployee,
+} from "../service/service";
 import { registerUserFromServer } from "../service/authService";
 import { loginUser } from "../service/authService";
 
@@ -79,28 +84,29 @@ const tasksSlice = createSlice({
         state.isAuthentication = false;
       });
 
-      builder.addCase(fetchAllEmployees.pending, (state) => {
+    builder
+      .addCase(fetchAllEmployees.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchAllEmployees.fulfilled, (state, action) =>{
+      .addCase(fetchAllEmployees.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.employeeInfo = action.payload.user
-
+        state.employeeInfo = action.payload.user;
       })
       .addCase(fetchAllEmployees.rejected, (state) => {
         state.isLoading = false;
       });
 
-      builder.addCase(getLoggedInEmployee.pending, (state ) => {
-        state.isLoading = true
+    builder
+      .addCase(getLoggedInEmployee.pending, (state) => {
+        state.isLoading = true;
       })
       .addCase(getLoggedInEmployee.fulfilled, (state, action) => {
         state.isLoading = false;
         state.loggedEmployee = action.payload.tasks;
       })
-      .addCase(getLoggedInEmployee.rejected, (state) =>{
+      .addCase(getLoggedInEmployee.rejected, (state) => {
         state.isLoading = true;
-      })
+      });
   },
 });
 

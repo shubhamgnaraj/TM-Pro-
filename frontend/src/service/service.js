@@ -74,57 +74,66 @@ export const getLoggedInEmployee = createAsyncThunk(
 
 export const fetchAllMessages = async (chatId) => {
   try {
-    const token = localStorage.getItem("token")
-    if(chatId) {
+    const token = localStorage.getItem("token");
+    if (chatId) {
       const response = await fetch(`${BASE_URL}/messages/${chatId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
-      if(!response.ok) throw new Error("Faild to fetch messages")
 
-        const data =  await response.json()
+      if (!response.ok) throw new Error("Faild to fetch messages");
 
-        return data
+      const data = await response.json();
+
+      return data;
     }
   } catch (error) {
-    console.log("Error fetching messages: ", error)
+    console.log("Error fetching messages: ", error);
   }
-}
+};
 
 export const deleteTask = async (employeeId, taskId) => {
   try {
-    const response = await authFetch(`${BASE_URL}/view-details/${employeeId}/task/${taskId}`, {
-      method: 'DELETE'
-    })
+    const response = await authFetch(
+      `${BASE_URL}/view-details/${employeeId}/task/${taskId}`,
+      {
+        method: "DELETE",
+      }
+    );
     const data = await response.json();
 
     return data;
   } catch (error) {
-    console.log('task was not deleted: ', error)
+    console.log("task was not deleted: ", error);
   }
-}
+};
 
 export const updateTask = async (taskData, mode, employeeId, taskId) => {
   try {
-    const response = await authFetch(`${BASE_URL}/manager/sendTask/${mode}/${employeeId}/${taskId}`, {
-      method: "PUT",
-      body: JSON.stringify(taskData)
-    });
+    const response = await authFetch(
+      `${BASE_URL}/manager/sendTask/${mode}/${employeeId}/${taskId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(taskData),
+      }
+    );
     const data = await response.json();
-    
+
     return data;
   } catch (error) {
-    console.log("Something went wrong about updated Task: ", error)
+    console.log("Something went wrong about updated Task: ", error);
   }
-}
+};
 
 export const acceptedAndPendingTask = async (employeeId) => {
   try {
-    const response = await authFetch(`${BASE_URL}/employee/tasks/${employeeId}`, {
-      method: "PUT",
-    });
+    const response = await authFetch(
+      `${BASE_URL}/employee/tasks/${employeeId}`,
+      {
+        method: "PUT",
+      }
+    );
 
     if (!response.ok) {
       console.error(`Error ${response.status}: ${response.statusText}`);
@@ -133,9 +142,11 @@ export const acceptedAndPendingTask = async (employeeId) => {
 
     const data = await response.json();
     return data;
-
   } catch (error) {
-    console.error("Something went wrong with accepted and pending task:", error.message);
+    console.error(
+      "Something went wrong with accepted and pending task:",
+      error.message
+    );
     throw error;
   }
 };

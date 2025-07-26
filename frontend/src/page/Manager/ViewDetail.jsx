@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { deleteTask, fetchAllEmployees } from "../service/service";
-import Navbar from "../components/Navbar";
-import MagicLoader from "../components/MagicLoader";
+import { deleteTask, fetchAllEmployees } from "../../service/service";
+import Navbar from "../../components/Navbar";
+import MagicLoader from "../../components/MagicLoader";
 import { Link } from "react-router";
-import HeadingComp from "../components/HeadingComp";
+import HeadingComp from "../../components/HeadingComp";
+import CountDownTask from "../../components/CountDownTask";
 
 function ViewDetail() {
   const [employee, setEmployee] = useState([]);
@@ -44,7 +45,7 @@ function ViewDetail() {
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
 
-      <HeadingComp headingName={"Employee-Tasks"}/>
+      <HeadingComp headingName={"Employee-Tasks"} />
       <div className="my-12">
         <h1 className="text-3xl text-center font-bold text-gray-700 capitalize mb-6 tracking-wide">
           {employee.firstname + " " + employee.lastname}
@@ -81,18 +82,25 @@ function ViewDetail() {
                         {task.description}
                       </p>
 
-                      <div className="flex justify-between text-xs text-gray-600">
-                        <span>
-                          <span className="font-medium">Tags:</span> <span className="text-blue-600">{task.tags}</span>
-                        </span>
-                        <span>
-                          <span className="font-medium">Due:</span> {task.date}
-                        </span>
+                      <div className="flex flex-col justify-between text-xs text-gray-600 w-full">
+                        <div>
+                          <span className="font-medium">Tags:</span>{" "}
+                          <span className="text-blue-600">{task.tags}</span>
+                        </div>
+                        <div className="flex w-full items-center">
+                          <span className="font-medium w-full">
+                            Time-Deadline:{" "}
+                          </span>
+                          <CountDownTask dueDate={task.date} />
+                        </div>
                       </div>
                     </div>
 
                     <div className="mt-6 flex justify-end gap-3">
-                      <Link to={`/manager/send-task-employee/edit/${employee._id}/${task._id}`} className="text-sm px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg font-medium transition-all">
+                      <Link
+                        to={`/manager/send-task-employee/edit/${employee._id}/${task._id}`}
+                        className="text-sm px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg font-medium transition-all"
+                      >
                         Edit
                       </Link>
                       <button
@@ -109,11 +117,7 @@ function ViewDetail() {
               })}
             </div>
           ) : (
-            <h1 className="text-4xl font-extrabold text-white mb-8 text-center drop-shadow-lg tracking-wide">
-              <span className="bg-gradient-to-r from-blue-300 via-teal-300 to-green-300 bg-clip-text text-transparent">
-                No Task Asssign Yet Enjoy Your Day 🎉
-              </span>
-            </h1>
+            <HeadingComp headingName={"No Task Assign Yet Enjou Your Day"} />
           )}
         </div>
       </div>

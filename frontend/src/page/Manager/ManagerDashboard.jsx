@@ -22,7 +22,7 @@ function ManagerDashboard() {
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
 
-      <HeadingComp headingName={"Manager-Dashboard"}/>
+      <HeadingComp headingName={"Manager-Dashboard"} />
       <div className="flex px-6 py-4 flex-wrap gap-6 mt-5">
         {employeeInfo && employeeInfo.length > 0 ? (
           employeeInfo.map((employee) => {

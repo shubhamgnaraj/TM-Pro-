@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import BackgroundPage from '../components/BackgroundPage'
 
 function Home() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-blue-700 via-teal-400 to-green-400 flex flex-col items-center justify-center relative overflow-hidden">
+    <BackgroundPage>
       <div className="absolute inset-0 pointer-events-none">
         <svg width="100%" height="100%">
           <defs>
@@ -37,7 +38,7 @@ function Home() {
           </Link>
         </div>
       </div>
-    </div>
+    </BackgroundPage>
   )
 }
 
