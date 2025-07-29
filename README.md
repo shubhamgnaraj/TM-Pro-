@@ -13,16 +13,22 @@
 
 ## 📌 Planned Features:
 - 📁 Task creation, update, and deletion
-- 📊 Manager dashboard
+- 📊 Manager dashboard - Employee dashboard
 - 📡 Real-time messaging between employee and manager
 - 📎 File uploads and attachments
--  meaningFull variables...
+-  MeaningFull variables...
+-  Tasks Status, Total, Pending, Aceepted
+- ⏱ Time deadline
 
 ## 🚧 Development Status:
 - [x] Project Setup
-- [ ] Backend Routes
-- [ ] Frontend UI Design
-- [ ] Authentication System
-- [ ] Socket.IO Integration
+- [✅] Backend Routes
+- [✅] Mongoose Database
+- [✅] Frontend UI Design
+- [✅] Authentication System
+- [✅] Socket.IO Integration
+- [✅] Multer Uploading Photos
+- [✅] CORS Handle Client Origin
+- [✅] Moragan Log Status Code
 
 ## 📁 Folder Structure (MVC):

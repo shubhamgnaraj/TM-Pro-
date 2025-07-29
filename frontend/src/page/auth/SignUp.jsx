@@ -54,7 +54,6 @@ function SignUp() {
     <div className="w-full h-screen">
       <Navbar />
       {/*  p-8 */}
-      <BackgroundPage>
         <div className="relative z-10 w-full max-w-md mx-auto bg-white/30 backdrop-blur-lg rounded-2xl shadow-2xl py-2 px-8">
           <div className="flex flex-col items-center ">
             <div className="bg-gradient-to-tr from-blue-500 to-green-400 rounded-full p-3 shadow-lg mb-2">
@@ -160,7 +159,7 @@ function SignUp() {
               </select>
             </div>
 
-            <ButtonField innerText={"Sign Up"} />
+            <ButtonField insideText={"Sign Up"} />
           </form>
           <div className=" text-center">
             <span className="text-black/40 text-sm">
@@ -174,7 +173,6 @@ function SignUp() {
             </Link>
           </div>
         </div>
-      </BackgroundPage>
     </div>
   );
 }

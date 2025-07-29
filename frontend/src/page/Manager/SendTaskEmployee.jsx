@@ -266,7 +266,7 @@ function SendTaskEmployee() {
             {/* Submit Button */}
             <div>
               <ButtonField
-                innerText={mode === "edit" ? "Update Task" : "Assign Task"}
+                insideText={mode === "edit" ? "Update Task" : "Assign Task"}
               />
             </div>
           </form>

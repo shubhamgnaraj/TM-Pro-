@@ -6,26 +6,36 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllEmployees } from "../../service/service";
 import HeadingComp from "../../components/HeadingComp";
+import DebouncInput from "../../components/DebouncInput";
 
 function ManagerDashboard() {
-  const [users, setUsers] = useState(null);
-
+  const [users, setUsers] = useState([])
+  
   const { employeeInfo } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAllEmployees());
   }, []);
 
+  useEffect(() => {
+    if(employeeInfo) {
+      setUsers(employeeInfo)
+    }
+  }, [employeeInfo])
+
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#c6ffe0] via-[#f6e6ff] to-[#d1e3ff] p-8">
       <Navbar />
 
+      <div className="w-full">
+
+      <DebouncInput users={users} setUsers={setUsers}/>
+      </div>
       <HeadingComp headingName={"Manager-Dashboard"} />
       <div className="flex px-6 py-4 flex-wrap gap-6 mt-5">
-        {employeeInfo && employeeInfo.length > 0 ? (
-          employeeInfo.map((employee) => {
+        {users && users.length > 0 ? (
+          users.map((employee) => {
             if (employee.position === "employee") {
               return (
                 <div

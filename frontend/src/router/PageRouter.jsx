@@ -9,6 +9,7 @@ import ManagerDashboard from "../page/Manager/ManagerDashboard";
 import SendTaskEmployee from "../page/Manager/SendTaskEmployee";
 import SignUp from "../page/auth/SignUp";
 import MessagesEmpVsMan from "../page/MessagesEmpVsMan";
+import ViewDetail from "../page/Manager/ViewDetail";
 
 function PageRouter() {
   const { user } = useContext(AuthContext);
@@ -46,6 +47,14 @@ function PageRouter() {
               element={
                 <PrivacyComp>
                   <ManagerDashboard />
+                </PrivacyComp>
+              }
+            />
+            <Route
+              path="/view-details/:id"
+              element={
+                <PrivacyComp>
+                  <ViewDetail />
                 </PrivacyComp>
               }
             />

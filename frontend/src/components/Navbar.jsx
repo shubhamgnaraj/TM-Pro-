@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config";
 import { BiMessageRounded } from "react-icons/bi";
+import DebouncInput from "./DebouncInput";
 
 function Navbar({ loggedEmployee }) {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ function Navbar({ loggedEmployee }) {
     <header className="w-full sticky top-0 z-50 bg-white/50 backdrop-blur-lg shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {decode.position === "manager" ? (
-          <div className=" w-[70%] flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
+          <div className="w-[100%] flex items-center justify-around">
+            {/* Left: Logo */}
+            <div className="flex gap-5 items-center">
+              <Link to="/" className="flex items-center gap-2">
               <img
                 src="/images/taskLogo.png"
                 alt="Logo"
@@ -23,7 +25,11 @@ function Navbar({ loggedEmployee }) {
               />
             </Link>
 
-            {/* Navigation */}
+            {/* Middle: Input */}
+            {/* <DebouncInput /> */}
+            </div>
+
+            {/* Right: Navigation */}
             <nav className="flex gap-5 items-center">
               {[
                 { to: "/manager/dashboard", label: "Home" },
@@ -54,28 +60,28 @@ function Navbar({ loggedEmployee }) {
             </nav>
           </div>
         ) : (
-          <div className="w-full max-w-4xl mx-auto flex items-center justify-between transition-transform duration-300">
-            {/* Left - Profile Info */}
+          <div className="w-full max-w-6xl mx-auto flex items-center justify-between transition-transform duration-300 gap-5">
+            {/* Left: Profile Info */}
             <div className="flex items-center gap-5">
               <div className="relative">
                 <img
                   src={`${BASE_URL}/uploads/${loggedEmployee.photo}`}
                   alt="Employee"
-                  className="w-20 h-20 rounded-full object-center shadow-lg ring-4 ring-[#93c6bc] transition duration-300 hover:scale-105"
+                  className="w-16 h-16 rounded-full object-center shadow-lg ring-4 ring-[#93c6bc] transition duration-300 hover:scale-105"
                 />
               </div>
 
               <div>
-                <h2 className="text-2xl font-semibold text-white tracking-wide flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-white tracking-wide flex items-center gap-2">
                   <span className="text-gray-500 text-lg capitalize">
                     {loggedEmployee.firstname + " " + loggedEmployee.lastname}
                   </span>
                 </h2>
                 <p className="text-sm text-gray-300">Frontend Developer</p>
 
-                <div className="flex items-center gap-2 mt-3">
+                <div className="flex items-center gap-2 mt-2">
                   <span className="bg-[#00f5c6]/10 text-[#7a9892] text-xs font-medium px-3 py-1 rounded-lg">
-                    Employee ID: {loggedEmployee?._id.slice(0, 8)}...
+                    ID: {loggedEmployee?._id.slice(0, 8)}...
                   </span>
                   <span className="bg-blue-500/10 text-blue-400 text-xs font-medium px-3 py-1 rounded-full">
                     Active
@@ -84,7 +90,10 @@ function Navbar({ loggedEmployee }) {
               </div>
             </div>
 
-            {/* Right - Message Button */}
+            {/* Middle: Input */}
+            <InputField />
+
+            {/* Right: Message Icon */}
             <Link
               to={`/messages/${loggedEmployee?._id}`}
               title="Send Message"
@@ -95,7 +104,7 @@ function Navbar({ loggedEmployee }) {
           </div>
         )}
 
-        {/* Auth */}
+        {/* Auth Button */}
         <div>
           {token ? (
             <button

@@ -45,7 +45,7 @@ function Login() {
       });
   };
   return (
-      <BackgroundPage>
+    <BackgroundPage>
       <div className="relative z-10 w-full max-w-md mx-auto bg-white/30 backdrop-blur-lg rounded-2xl shadow-2xl p-8">
         <div className="flex flex-col items-center mb-6">
           <div className="bg-gradient-to-tr from-blue-500 to-green-400 rounded-full p-3 shadow-lg mb-2">
@@ -120,8 +120,14 @@ function Login() {
             placeholder="Enter your password"
           />
 
-          <ButtonField innerText={manager ? "Manager-Login" : "Login"}/>
-
+          {/* <ButtonField /> */}
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-500 via-teal-400 to-green-400 text-white py-3 px-4 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-green-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+          >
+            {manager ? "Manager-Login" : "Login"}
+          </button>
+          
         </form>
         <div className="flex justify-between items-center mt-4">
           <span className="text-white/80 text-sm">Forgot password?</span>
@@ -155,7 +161,7 @@ function Login() {
           </div>
         )}
       </div>
-      </BackgroundPage>
+    </BackgroundPage>
   );
 }
 

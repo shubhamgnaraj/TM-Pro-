@@ -25,7 +25,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
     },
   },
-}));;
+}));
 app.use(morgan('dev'))
 
 app.use(express.json());
