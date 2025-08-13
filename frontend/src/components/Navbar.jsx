@@ -25,8 +25,6 @@ function Navbar({ loggedEmployee }) {
               />
             </Link>
 
-            {/* Middle: Input */}
-            {/* <DebouncInput /> */}
             </div>
 
             {/* Right: Navigation */}
@@ -37,6 +35,7 @@ function Navbar({ loggedEmployee }) {
                 { to: "/manager/send-task-employee", label: "Send Task" },
                 { to: "/task/setting", label: "Settings" },
                 { to: "/manager/add-user", label: "Add User" },
+                { to: "/manager/create-group", label: "Create-Groups"}
               ].map((item, i) => (
                 <Link
                   key={i}
@@ -89,9 +88,6 @@ function Navbar({ loggedEmployee }) {
                 </div>
               </div>
             </div>
-
-            {/* Middle: Input */}
-            <InputField />
 
             {/* Right: Message Icon */}
             <Link

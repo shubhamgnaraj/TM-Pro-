@@ -10,6 +10,8 @@ import SendTaskEmployee from "../page/Manager/SendTaskEmployee";
 import SignUp from "../page/auth/SignUp";
 import MessagesEmpVsMan from "../page/MessagesEmpVsMan";
 import ViewDetail from "../page/Manager/ViewDetail";
+import CreateGroup from "../page/Manager/CreateGroup";
+import MsgEmpVsManAndAi from "../page/MsgEmpVsManAndAi";
 
 function PageRouter() {
   const { user } = useContext(AuthContext);
@@ -85,6 +87,14 @@ function PageRouter() {
                 </PrivacyComp>
               }
             />
+
+            <Route
+            path="/manager/create-group"
+            element={
+              <PrivacyComp>
+                <CreateGroup />
+              </PrivacyComp>
+            } />
           </>
         )}
       </Routes>

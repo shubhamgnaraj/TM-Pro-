@@ -21,6 +21,7 @@ const MessagesEmpVsMan = () => {
   const dispatch = useDispatch();
 
   const { employeeInfo, loggedEmployee } = useSelector((state) => state.user);
+  
   const token = localStorage.getItem("token");
   const decode = jwtDecode(token);
 
